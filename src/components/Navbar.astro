@@ -1,0 +1,76 @@
+---
+import categories from "../data/categories.json";
+
+const navItems = categories;
+---
+
+<header
+    class="sticky top-0 z-50 w-full border-b border-white/10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md"
+>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <!-- Logo & Brand -->
+            <a href="/" class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-3xl"
+                    >diamond</span
+                >
+                <h1
+                    class="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase"
+                >
+                    Kanishka <span class="text-primary">Creations</span>
+                </h1>
+            </a>
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-8">
+                {
+                    navItems.map((item) => (
+                        <a
+                            class="text-sm font-medium hover:text-primary transition-colors"
+                            href={`/search?category=${item.id}`}
+                        >
+                            {item.title}
+                        </a>
+                    ))
+                }
+            </nav>
+            <!-- Action Icons -->
+            <div class="flex items-center gap-4">
+                <div class="relative hidden sm:block">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg"
+                        >search</span
+                    >
+                    <input
+                        id="global-search"
+                        class="bg-slate-100 dark:bg-white/5 border-none rounded-full pl-10 pr-4 py-1.5 text-sm focus:ring-1 focus:ring-primary w-48 transition-all focus:w-64"
+                        placeholder="Search..."
+                        type="text"
+                    />
+                </div>
+                <a
+                    href="/cart"
+                    class="p-2 hover:bg-slate-100 dark:hover:bg-white/10 rounded-full transition-colors relative"
+                >
+                    <span class="material-symbols-outlined">shopping_bag</span>
+                    <span
+                        class="absolute top-1 right-1 bg-primary text-background-dark text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full"
+                        >3</span
+                    >
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    const searchInput = document.getElementById(
+        "global-search",
+    ) as HTMLInputElement;
+    if (searchInput) {
+        searchInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter" && searchInput.value.trim()) {
+                window.location.href = `/search?q=${encodeURIComponent(searchInput.value.trim())}`;
+            }
+        });
+    }
+</script>

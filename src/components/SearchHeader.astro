@@ -1,0 +1,54 @@
+---
+interface Props {
+    title: string;
+    itemsCount: number;
+    category: string;
+}
+
+const { title, itemsCount, category } = Astro.props;
+---
+
+<div
+    class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4"
+>
+    <div>
+        <h2 class="text-2xl font-bold dark:text-white" id="search-title">
+            {title}
+        </h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            Showing <span id="items-count-display"
+                >{itemsCount.toLocaleString()}</span
+            > items in <span
+                class="text-slate-900 dark:text-white font-medium"
+                id="category-display"
+            >
+                {category}
+            </span>
+        </p>
+    </div>
+    <div class="flex items-center gap-4 w-full md:w-auto">
+        <div
+            class="flex items-center border border-slate-200 dark:border-white/10 rounded-lg overflow-hidden h-10"
+        >
+            <button
+                class="px-3 h-full bg-slate-200 dark:bg-white/10 text-slate-900 dark:text-white border-r border-slate-200 dark:border-white/10 grid-view-btn"
+            >
+                <span class="material-symbols-outlined text-xl">grid_view</span>
+            </button>
+            <button
+                class="px-3 h-full hover:bg-slate-100 dark:hover:bg-white/5 text-slate-500 transition-colors list-view-btn"
+            >
+                <span class="material-symbols-outlined text-xl">view_list</span>
+            </button>
+        </div>
+        <select
+            id="sort-select"
+            class="flex-1 md:flex-none bg-background-light dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg py-2 pl-3 pr-10 text-sm focus:ring-primary focus:border-primary dark:text-white outline-none cursor-pointer"
+        >
+            <option value="popularity">Sort by: Popularity</option>
+            <option value="newest">Newest Arrivals</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+        </select>
+    </div>
+</div>

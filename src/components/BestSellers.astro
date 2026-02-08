@@ -1,0 +1,36 @@
+---
+import ProductCard from "./ProductCard.astro";
+import products from "../data/products.json";
+
+const bestSellers = products.filter((p) => p.isBestSeller).slice(0, 4);
+---
+
+<section
+    class="bg-background-light dark:bg-background-dark border-y border-slate-200 dark:border-white/5 py-32 transition-colors duration-300"
+>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+            class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4"
+        >
+            <div>
+                <h2 class="text-3xl font-bold dark:text-white">
+                    Best <span class="text-primary italic">Sellers</span>
+                </h2>
+            </div>
+            <a
+                class="text-primary font-bold flex items-center gap-1 hover:underline decoration-2 underline-offset-4 transition-all"
+                href="/search"
+            >
+                <span>Discover Collections</span>
+                <span
+                    class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1"
+                    >arrow_forward</span
+                >
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            {bestSellers.map((product) => <ProductCard {...product} />)}
+        </div>
+    </div>
+</section>

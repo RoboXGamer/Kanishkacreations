@@ -1,0 +1,50 @@
+---
+interface Props {
+    id: string;
+    category: string;
+    title: string;
+    price: string;
+    image: string;
+    badge?: string | null;
+}
+
+const { id, category, title, price, image, badge } = Astro.props;
+---
+
+<div
+    class="group bg-background-light dark:bg-background-dark rounded-xl p-4 transition-all hover:ring-2 hover:ring-primary/50 relative"
+>
+    <a href={`/product?id=${id}`} class="block">
+        <div
+            class="relative aspect-square overflow-hidden rounded-lg mb-4 bg-slate-200 dark:bg-white/5"
+        >
+            {
+                badge && (
+                    <div
+                        class={`absolute top-2 left-2 z-10 ${badge === "HOT SELLING" ? "bg-primary text-background-dark" : "bg-slate-800 text-white"} font-bold text-[10px] px-2 py-1 rounded`}
+                    >
+                        {badge}
+                    </div>
+                )
+            }
+            <img
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                src={image}
+                alt={title}
+            />
+        </div>
+        <p
+            class="text-slate-400 text-xs uppercase font-semibold tracking-widest mb-1"
+        >
+            {category}
+        </p>
+        <h3
+            class="font-bold mb-2 group-hover:text-primary transition-colors line-clamp-1 dark:text-white"
+        >
+            {title}
+        </h3>
+        <div class="flex items-center justify-between">
+            <p class="text-lg font-black dark:text-white">{price}</p>
+        </div>
+    </a>
+</div>

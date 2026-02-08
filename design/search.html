@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Product Search &amp; Filters | Kanishka Creations</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f5d63d",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#121212",
+                        "surface-dark": "#1e1e1e",
+                        "border-dark": "#333333",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #333333;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-border-dark bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between gap-8">
+<!-- Brand Logo -->
+<div class="flex items-center gap-3 shrink-0">
+<div class="text-primary">
+<span class="material-symbols-outlined text-3xl">diamond</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Kanishka <span class="text-primary font-medium">Creations</span></h1>
+</div>
+<!-- Central Search -->
+<div class="flex-1 max-w-2xl relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="w-full bg-slate-100 dark:bg-surface-dark border-none focus:ring-1 focus:ring-primary rounded-lg py-2 pl-10 pr-4 text-sm placeholder:text-slate-500 dark:placeholder:text-slate-400 transition-all outline-none" placeholder="Search raw materials, accessories, or gifts..." type="text"/>
+</div>
+<!-- Right Actions -->
+<nav class="flex items-center gap-6 shrink-0">
+<a class="hidden lg:block text-sm font-medium hover:text-primary transition-colors" href="#">Collections</a>
+<a class="hidden lg:block text-sm font-medium hover:text-primary transition-colors" href="#">Custom Orders</a>
+<div class="h-6 w-[1px] bg-slate-200 dark:bg-border-dark hidden lg:block"></div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-slate-200 dark:hover:bg-surface-dark rounded-full transition-colors relative">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="absolute top-1 right-1 w-4 h-4 bg-primary text-[10px] text-black font-bold flex items-center justify-center rounded-full">3</span>
+</button>
+<button class="p-2 hover:bg-slate-200 dark:hover:bg-surface-dark rounded-full transition-colors">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</nav>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto flex gap-8 px-6 py-8">
+<!-- Sidebar Filters -->
+<aside class="w-64 shrink-0 flex flex-col gap-8 sticky top-24 self-start max-h-[calc(100vh-120px)] overflow-y-auto custom-scrollbar pr-2">
+<!-- Category Filter -->
+<section>
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">Categories</h3>
+<div class="flex flex-col gap-1">
+<button class="flex items-center justify-between w-full px-3 py-2 rounded-lg bg-primary/10 text-primary group transition-all">
+<span class="flex items-center gap-3 text-sm font-medium">
+<span class="material-symbols-outlined text-xl">deployed_code</span>
+                            Raw Material
+                        </span>
+<span class="text-[10px] bg-primary text-black px-1.5 rounded-full font-bold">128</span>
+</button>
+<button class="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-surface-dark text-slate-700 dark:text-slate-300 transition-all">
+<span class="flex items-center gap-3 text-sm font-medium">
+<span class="material-symbols-outlined text-xl">styler</span>
+                            Hair Accessories
+                        </span>
+<span class="text-[10px] text-slate-500 font-medium">42</span>
+</button>
+<button class="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-surface-dark text-slate-700 dark:text-slate-300 transition-all">
+<span class="flex items-center gap-3 text-sm font-medium">
+<span class="material-symbols-outlined text-xl">featured_seasonal_and_gifts</span>
+                            Corporate Gifting
+                        </span>
+<span class="text-[10px] text-slate-500 font-medium">18</span>
+</button>
+<button class="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-surface-dark text-slate-700 dark:text-slate-300 transition-all">
+<span class="flex items-center gap-3 text-sm font-medium">
+<span class="material-symbols-outlined text-xl">box</span>
+                            Gift Hampers
+                        </span>
+<span class="text-[10px] text-slate-500 font-medium">24</span>
+</button>
+</div>
+</section>
+<!-- Price Range -->
+<section>
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">Price Range</h3>
+<div class="px-2">
+<input class="w-full h-1.5 bg-slate-200 dark:bg-border-dark rounded-lg appearance-none cursor-pointer accent-primary" max="5000" min="0" type="range"/>
+<div class="flex justify-between items-center mt-3">
+<span class="text-xs text-slate-500">$0</span>
+<span class="text-sm font-bold text-primary">$5,000+</span>
+</div>
+</div>
+</section>
+<!-- Materials Multi-select -->
+<section>
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">Materials</h3>
+<div class="flex flex-col gap-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative flex items-center justify-center">
+<input checked="" class="peer h-5 w-5 rounded border-slate-300 dark:border-border-dark bg-transparent text-primary focus:ring-0 focus:ring-offset-0 transition-all" type="checkbox"/>
+</div>
+<span class="text-sm text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">Silk &amp; Satin</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative flex items-center justify-center">
+<input class="peer h-5 w-5 rounded border-slate-300 dark:border-border-dark bg-transparent text-primary focus:ring-0 focus:ring-offset-0 transition-all" type="checkbox"/>
+</div>
+<span class="text-sm text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">Gold Plated Metal</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative flex items-center justify-center">
+<input class="peer h-5 w-5 rounded border-slate-300 dark:border-border-dark bg-transparent text-primary focus:ring-0 focus:ring-offset-0 transition-all" type="checkbox"/>
+</div>
+<span class="text-sm text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">Glass Beads</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative flex items-center justify-center">
+<input class="peer h-5 w-5 rounded border-slate-300 dark:border-border-dark bg-transparent text-primary focus:ring-0 focus:ring-offset-0 transition-all" type="checkbox"/>
+</div>
+<span class="text-sm text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">Polished Wood</span>
+</label>
+</div>
+</section>
+<!-- Rating Filter -->
+<section>
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">Avg. Rating</h3>
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2 text-primary cursor-pointer hover:bg-slate-100 dark:hover:bg-surface-dark p-1 rounded transition-colors">
+<span class="material-symbols-outlined text-lg fill-1">star</span>
+<span class="material-symbols-outlined text-lg fill-1">star</span>
+<span class="material-symbols-outlined text-lg fill-1">star</span>
+<span class="material-symbols-outlined text-lg fill-1">star</span>
+<span class="material-symbols-outlined text-lg">star</span>
+<span class="text-xs text-slate-400 ml-1">&amp; Up</span>
+</div>
+</div>
+</section>
+</aside>
+<!-- Product Grid Area -->
+<div class="flex-1">
+<!-- Grid Header -->
+<div class="flex items-center justify-between mb-8">
+<div>
+<h2 class="text-2xl font-bold">Search Results</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Showing 1,240 items in <span class="text-slate-900 dark:text-white font-medium">Raw Materials</span></p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center border border-slate-200 dark:border-border-dark rounded-lg overflow-hidden h-10">
+<button class="px-3 h-full bg-slate-200 dark:bg-surface-dark text-slate-900 dark:text-white border-r border-slate-200 dark:border-border-dark">
+<span class="material-symbols-outlined text-xl">grid_view</span>
+</button>
+<button class="px-3 h-full hover:bg-slate-100 dark:hover:bg-surface-dark text-slate-500">
+<span class="material-symbols-outlined text-xl">view_list</span>
+</button>
+</div>
+<select class="bg-background-light dark:bg-surface-dark border border-slate-200 dark:border-border-dark rounded-lg py-2 pl-3 pr-10 text-sm focus:ring-primary focus:border-primary">
+<option>Sort by: Popularity</option>
+<option>Newest Arrivals</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Customer Rating</option>
+</select>
+</div>
+</div>
+<!-- Products Responsive Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+<!-- Product Card 1 -->
+<div class="group flex flex-col bg-white dark:bg-surface-dark rounded-xl overflow-hidden border border-transparent hover:border-primary/50 transition-all duration-300">
+<div class="aspect-[4/5] relative overflow-hidden bg-slate-100 dark:bg-zinc-800">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Silk raw material fabric rolls premium quality" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP0-t4yFINIAH8MVNXI5ujoa7Xnb9ZUNzQUrp6ri0XtscZGTUom75Yl3gLgNopxdl5KXfe9TYtkzEJIk33ZlgcnvHQa3hehNh1M_q9c8rRrdYKZwPJLqT6jvLBpURn4FqP1LcFM9GHlBKm52OrCOZjVmeuG9a_GWtKjNGc8RfnZ_wtnTPQtQdcetv1CjetoaJ3OGUrgavAqARU0KhaaUv_cpwvkHN5zlHS6uNeh9E0LtRp_HqheRp973g2CtKtlH_HuyesDOqfSTwm"/>
+<div class="absolute top-3 right-3 flex flex-col gap-2">
+<button class="p-2 bg-white/90 dark:bg-background-dark/90 rounded-full shadow-lg hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-lg">favorite</span>
+</button>
+</div>
+<div class="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/60 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+<button class="w-full bg-primary text-black font-bold py-2 rounded-lg text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">shopping_cart</span>
+                                Add to Cart
+                            </button>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase text-slate-500 tracking-wider">Textiles</span>
+<div class="flex items-center text-primary">
+<span class="material-symbols-outlined text-xs fill-1">star</span>
+<span class="text-[10px] text-slate-400 ml-1 font-medium">(48)</span>
+</div>
+</div>
+<h4 class="font-bold text-slate-900 dark:text-white leading-tight group-hover:text-primary transition-colors">Hand-woven Banarasi Silk Thread</h4>
+<p class="text-primary font-bold text-lg mt-1">$24.99 <span class="text-slate-500 font-normal text-sm line-through ml-2">$35.00</span></p>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group flex flex-col bg-white dark:bg-surface-dark rounded-xl overflow-hidden border border-transparent hover:border-primary/50 transition-all duration-300">
+<div class="aspect-[4/5] relative overflow-hidden bg-slate-100 dark:bg-zinc-800">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Gold plated intricate jewelry design component" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4q8fTgQUmJSlGt6bYahlwUFdhOyIdpqtBfahdhFryyzbOLr1q9zGnwGFCQ651fBPOQSXLQ7-5OBmZmLUxKOCSv2avTbkF_BJfoSIxPNojUmfJ1zklr9qd2eMkFHrsFQKh52PxOvTRgfWiAOBIG5jQG4KObrgBn0Je-ZLwQ_PRolXpE5qPnf-w95WrbTxfwzoO5n88gvOa4BUJjnm6ddLc37xoAVL8ddDlF3RYS57P4JNXVFnMh8TI2NAK0IbJvi4RUbfJAHqloIs3"/>
+<div class="absolute top-3 right-3">
+<button class="p-2 bg-white/90 dark:bg-background-dark/90 rounded-full shadow-lg hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-lg">favorite</span>
+</button>
+</div>
+<div class="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/60 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+<button class="w-full bg-primary text-black font-bold py-2 rounded-lg text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">shopping_cart</span>
+                                Add to Cart
+                            </button>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase text-slate-500 tracking-wider">Metalwork</span>
+<div class="flex items-center text-primary">
+<span class="material-symbols-outlined text-xs fill-1">star</span>
+<span class="text-[10px] text-slate-400 ml-1 font-medium">(122)</span>
+</div>
+</div>
+<h4 class="font-bold text-slate-900 dark:text-white leading-tight group-hover:text-primary transition-colors">24K Gold Plated Brass Jhumka Base</h4>
+<p class="text-primary font-bold text-lg mt-1">$12.50</p>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group flex flex-col bg-white dark:bg-surface-dark rounded-xl overflow-hidden border border-transparent hover:border-primary/50 transition-all duration-300">
+<div class="aspect-[4/5] relative overflow-hidden bg-slate-100 dark:bg-zinc-800">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Natural polished wooden beads for craft" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCedkwOLFdMOm2P-Q6YeOOpzdiihw4CFl2r6UmNxulIUVGv7zIPDPM37FjGxu0sN8pnEJ5rC9ki74nrbbbtZ0T6zNlrL861nVgtWu1vaJpTm46RpBVv_msNTSCK0UffBHJZ73IrYfDu3ceYuUlt58SixkgAcrfR6ugMCFwpEBYGSAGqDsL8QOPmQ9zBFQ4z1VT-rJe9ZXkwT0ZIR-AIT_gDAYFp0usF16gZ2i93ZJYQVRN-04ncAynrQ-R4On6i6B7rMrw8E75PYKas"/>
+<div class="absolute top-3 right-3">
+<button class="p-2 bg-white/90 dark:bg-background-dark/90 rounded-full shadow-lg hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-lg">favorite</span>
+</button>
+</div>
+<div class="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/60 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+<button class="w-full bg-primary text-black font-bold py-2 rounded-lg text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">shopping_cart</span>
+                                Add to Cart
+                            </button>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase text-slate-500 tracking-wider">Organic</span>
+<div class="flex items-center text-primary">
+<span class="material-symbols-outlined text-xs fill-1">star</span>
+<span class="text-[10px] text-slate-400 ml-1 font-medium">(35)</span>
+</div>
+</div>
+<h4 class="font-bold text-slate-900 dark:text-white leading-tight group-hover:text-primary transition-colors">Polished Rosewood Round Beads Set</h4>
+<p class="text-primary font-bold text-lg mt-1">$8.90</p>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group flex flex-col bg-white dark:bg-surface-dark rounded-xl overflow-hidden border border-transparent hover:border-primary/50 transition-all duration-300">
+<div class="aspect-[4/5] relative overflow-hidden bg-slate-100 dark:bg-zinc-800">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Handmade crystal hairpin with leaf design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3IIQUKX4jlkFym8R14J843YkLtwWnfhn0UeaqgU8uf7oQNw6dz_DZcjlPk7kBBSVPFfQvqZsL42Wt7GNdy7IQ2xBypFCc4pLE95W68nMmxpxg9A8sgSFWtzASWSly2U1XcelaSyca8ixv5Mr8RjMq-jElmb1p643qJY5XMVuCZfZUd0D04gPdgwBgnT5L7G9ulBJ1HFMgeiIElx4Hjcb0_JuBBkDTiJ-OSnWZ-oWnsjdpGOizpjZa2J-i1SJv9F3moWhC_fawROoi"/>
+<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded tracking-tighter uppercase">Sold Out</div>
+<div class="absolute top-3 right-3">
+<button class="p-2 bg-white/90 dark:bg-background-dark/90 rounded-full shadow-lg hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-lg">favorite</span>
+</button>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1 opacity-60">
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase text-slate-500 tracking-wider">Accessories</span>
+<div class="flex items-center text-primary">
+<span class="material-symbols-outlined text-xs fill-1">star</span>
+<span class="text-[10px] text-slate-400 ml-1 font-medium">(214)</span>
+</div>
+</div>
+<h4 class="font-bold text-slate-900 dark:text-white leading-tight">Emerald Crystal Hair Clip</h4>
+<p class="text-primary font-bold text-lg mt-1">$32.00</p>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="group flex flex-col bg-white dark:bg-surface-dark rounded-xl overflow-hidden border border-transparent hover:border-primary/50 transition-all duration-300">
+<div class="aspect-[4/5] relative overflow-hidden bg-slate-100 dark:bg-zinc-800">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Mixed glass beads for custom jewelry crafting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDo4Wtv56G3kqQHu0I3xHVDjL7HtIBSRp9hHQNghX-EDA_dOWDF695lbGkqp0RVnKhtuAjuYcYEf4J8duj_dcbvZFfFCw69hhQwcuwxNaBtqqhui12T5tOhUy1wBnL7SZzk287RWLxWFiOOevtHxbVkbFrm_NwFsBrvd5PQXPnwfSeAbk0rNri9lVQKvWSJ2bOmx0wbQ6KDe0lAl9Foh08Nu2Trx4B1j7DeAtBTcjk5dy4E3-0g8NixEHkJPihdPtyxuACGTrO-v8np"/>
+<div class="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/60 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+<button class="w-full bg-primary text-black font-bold py-2 rounded-lg text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">shopping_cart</span>
+                                Add to Cart
+                            </button>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase text-slate-500 tracking-wider">Supplies</span>
+<div class="flex items-center text-primary">
+<span class="material-symbols-outlined text-xs fill-1">star</span>
+<span class="text-[10px] text-slate-400 ml-1 font-medium">(18)</span>
+</div>
+</div>
+<h4 class="font-bold text-slate-900 dark:text-white leading-tight group-hover:text-primary transition-colors">Pastel Dream Glass Bead Mix (500g)</h4>
+<p class="text-primary font-bold text-lg mt-1">$15.75</p>
+</div>
+</div>
+<!-- Product Card 6 -->
+<div class="group flex flex-col bg-white dark:bg-surface-dark rounded-xl overflow-hidden border border-transparent hover:border-primary/50 transition-all duration-300">
+<div class="aspect-[4/5] relative overflow-hidden bg-slate-100 dark:bg-zinc-800">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Luxury corporate gift hamper with variety of items" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaasajftQ0-shcMwi13azCJgQEIWHlI2xcYTsQp9MrpXRlzBlAvkDnb_kxOKVX5iZJIQJpRMNz3FjV15qgmqHFNjnMTqRruUsAGNV9QkznrtKMOC6hdszmF5Ee1odi0p4krA_YCKR6w8Ku2IlnTxFBjYnQbem9LtYh7Pr06_IhhwVj-ActFRt_SeM6gIt1w6JI_3rRCH7NTDw2FKLyHNuT7n3tk4ewoTQEx2epMqGir2LWJb18BVVB9MXueiaE6AK8zS81BKuNkpmX"/>
+<div class="absolute top-3 left-3 bg-primary text-black text-[10px] font-black px-2 py-0.5 rounded tracking-tighter uppercase">Bestseller</div>
+<div class="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/60 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+<button class="w-full bg-primary text-black font-bold py-2 rounded-lg text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">shopping_cart</span>
+                                Add to Cart
+                            </button>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase text-slate-500 tracking-wider">Gift Sets</span>
+<div class="flex items-center text-primary">
+<span class="material-symbols-outlined text-xs fill-1">star</span>
+<span class="text-[10px] text-slate-400 ml-1 font-medium">(256)</span>
+</div>
+</div>
+<h4 class="font-bold text-slate-900 dark:text-white leading-tight group-hover:text-primary transition-colors">Executive Artisan Desk Hamper</h4>
+<p class="text-primary font-bold text-lg mt-1">$89.00</p>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-16 flex flex-col items-center gap-6">
+<button class="px-12 py-3 bg-transparent border-2 border-primary text-primary hover:bg-primary hover:text-black font-bold rounded-lg transition-all flex items-center gap-3">
+                    Load More Products
+                    <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 dark:border-border-dark text-slate-500 hover:border-primary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-black font-bold">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 dark:border-border-dark hover:border-primary hover:text-primary transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 dark:border-border-dark hover:border-primary hover:text-primary transition-colors">3</button>
+<span class="px-2 text-slate-500">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 dark:border-border-dark hover:border-primary hover:text-primary transition-colors">42</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 dark:border-border-dark text-slate-500 hover:border-primary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-20 border-t border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark py-12">
+<div class="max-w-[1440px] mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-3">
+<div class="text-primary">
+<span class="material-symbols-outlined text-2xl">diamond</span>
+</div>
+<h2 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">Kanishka <span class="text-primary font-medium">Creations</span></h2>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                    Premium raw materials and artisanal creations for the modern connoisseur. Quality crafting supplies since 2012.
+                </p>
+<div class="flex gap-4">
+<a class="w-8 h-8 rounded-full bg-slate-100 dark:bg-background-dark flex items-center justify-center hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">alternate_email</span>
+</a>
+<a class="w-8 h-8 rounded-full bg-slate-100 dark:bg-background-dark flex items-center justify-center hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">share</span>
+</a>
+</div>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-slate-900 dark:text-white">Quick Links</h4>
+<ul class="flex flex-col gap-3 text-sm text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary transition-colors" href="#">All Products</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Bulk Inquiries</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Shipping Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-slate-900 dark:text-white">Customer Care</h4>
+<ul class="flex flex-col gap-3 text-sm text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary transition-colors" href="#">My Account</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Track Order</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Wishlist</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">FAQ</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-slate-900 dark:text-white">Newsletter</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Get exclusive updates on new collections.</p>
+<div class="flex gap-2">
+<input class="flex-1 bg-slate-100 dark:bg-background-dark border-none rounded-lg py-2 px-3 text-sm focus:ring-primary" placeholder="Email address" type="email"/>
+<button class="bg-primary text-black font-bold px-4 rounded-lg text-sm">Join</button>
+</div>
+</div>
+</div>
+<div class="max-w-[1440px] mx-auto px-6 mt-12 pt-8 border-t border-slate-200 dark:border-border-dark flex justify-between items-center text-[10px] text-slate-400 uppercase tracking-widest">
+<p>© 2024 Kanishka Creations. All rights reserved.</p>
+<div class="flex gap-6">
+<span>Privacy</span>
+<span>Security</span>
+<span>Cookies</span>
+</div>
+</div>
+</footer>
+</body></html>

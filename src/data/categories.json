@@ -1,0 +1,17 @@
+[
+    {
+        "id": "raw-materials",
+        "title": "Raw Materials",
+        "icon": "deployed_code"
+    },
+    {
+        "id": "hair-accessories",
+        "title": "Hair Accessories",
+        "icon": "styler"
+    },
+    {
+        "id": "corporate-gifting",
+        "title": "Corporate Gifting",
+        "icon": "featured_seasonal_and_gifts"
+    }
+]

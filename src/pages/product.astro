@@ -1,0 +1,433 @@
+---
+import Layout from "../layouts/Layout.astro";
+import productsData from "../data/products.json";
+import categories from "../data/categories.json";
+import ProductCard from "../components/ProductCard.astro";
+
+interface Product {
+    id: string;
+    category: string;
+    categoryId: string;
+    title: string;
+    price: string;
+    originalPrice?: string;
+    image: string;
+    badge?: string | null;
+    isBestSeller?: boolean;
+    description: string;
+    details: { label: string; value: string }[];
+    specifications: { label: string; value: string }[];
+    careInstructions: string[];
+}
+
+const products = productsData as Product[];
+
+// Get product ID from URL query param
+const productId = Astro.url.searchParams.get("id");
+
+// Find the product - try to match precisely
+const product =
+    products.find(
+        (p) => String(p.id).toLowerCase() === String(productId).toLowerCase(),
+    ) || products[0];
+
+// Find related products (same category, excluding current)
+const relatedProducts = products
+    .filter((p) => p.categoryId === product.categoryId && p.id !== product.id)
+    .slice(0, 4);
+
+// If not enough related in same category, get some best sellers
+if (relatedProducts.length < 4) {
+    const extra = products
+        .filter(
+            (p) =>
+                p.id !== product.id &&
+                !relatedProducts.find((rp) => rp.id === p.id),
+        )
+        .slice(0, 4 - relatedProducts.length);
+    relatedProducts.push(...extra);
+}
+---
+
+<Layout title={`${product.title} | Kanishka Creations`}>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Breadcrumbs -->
+        <nav
+            class="flex items-center gap-2 mb-10 text-[10px] md:text-xs font-medium uppercase tracking-widest text-slate-500 overflow-x-auto whitespace-nowrap pb-2 custom-scrollbar"
+        >
+            <a class="hover:text-primary transition-colors" href="/">Home</a>
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <a class="hover:text-primary transition-colors" href="/search"
+                >Collections</a
+            >
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <a
+                class="hover:text-primary transition-colors"
+                href={`/search?category=${product.categoryId}`}
+                >{product.category}</a
+            >
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <span
+                class="text-slate-900 dark:text-white truncate max-w-[150px] md:max-w-none"
+                >{product.title}</span
+            >
+        </nav>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+            <!-- Left Side: Image Gallery -->
+            <div class="lg:col-span-7 flex flex-col-reverse md:flex-row gap-6">
+                <!-- Thumbnails -->
+                <div
+                    class="flex md:flex-col gap-4 overflow-x-auto md:overflow-y-auto pb-2 md:pb-0 custom-scrollbar"
+                >
+                    <div
+                        class="thumbnail active w-20 h-20 shrink-0 rounded-lg border-2 border-primary overflow-hidden cursor-pointer shadow-lg"
+                        data-image={product.image}
+                    >
+                        <img
+                            class="w-full h-full object-cover"
+                            src={product.image}
+                            alt={product.title}
+                        />
+                    </div>
+                    {
+                        [1, 2, 3].map((i) => (
+                            <div
+                                class="thumbnail w-20 h-20 shrink-0 rounded-lg border border-slate-200 dark:border-white/10 overflow-hidden cursor-pointer hover:border-primary/50 transition-colors bg-white/5 opacity-80"
+                                data-image={product.image}
+                            >
+                                <img
+                                    class="w-full h-full object-cover"
+                                    src={product.image}
+                                    alt="Detail view"
+                                />
+                            </div>
+                        ))
+                    }
+                </div>
+
+                <!-- Main Image -->
+                <div class="flex-1">
+                    <div
+                        class="aspect-[4/5] sm:aspect-square md:aspect-[4/5] rounded-xl overflow-hidden bg-white/5 border border-white/10 relative group shadow-2xl"
+                    >
+                        {
+                            product.badge && (
+                                <div class="absolute top-4 left-4 z-10 px-3 py-1 bg-primary text-background-dark text-[10px] font-bold rounded uppercase tracking-widest">
+                                    {product.badge}
+                                </div>
+                            )
+                        }
+                        <img
+                            id="main-product-image"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            src={product.image}
+                            alt={product.title}
+                        />
+                        <div
+                            class="absolute bottom-4 right-4 group-hover:scale-110 transition-transform"
+                        >
+                            <button
+                                id="zoom-button"
+                                class="bg-background-dark/60 backdrop-blur-md p-2 rounded-full border border-white/20 text-white hover:bg-primary hover:text-background-dark transition-all flex items-center justify-center shadow-lg"
+                                aria-label="Zoom image"
+                            >
+                                <span class="material-symbols-outlined text-lg"
+                                    >zoom_in</span
+                                >
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Product Details -->
+            <div class="lg:col-span-5 flex flex-col justify-center">
+                <div class="space-y-8">
+                    <header>
+                        <h1
+                            class="text-3xl md:text-5xl font-bold dark:text-white text-slate-900 leading-tight mb-4 tracking-tight"
+                        >
+                            {product.title}
+                        </h1>
+                        <p
+                            class="text-slate-500 dark:text-slate-400 leading-relaxed max-w-md"
+                        >
+                            {product.description}
+                        </p>
+                    </header>
+
+                    <div class="flex items-center gap-4">
+                        <span class="text-4xl font-bold text-primary"
+                            >{product.price}</span
+                        >
+                        {
+                            product.originalPrice && (
+                                <>
+                                    <span class="text-lg text-slate-400 line-through">
+                                        {product.originalPrice}
+                                    </span>
+                                    <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded tracking-tighter uppercase">
+                                        Save 20%
+                                    </span>
+                                </>
+                            )
+                        }
+                    </div>
+
+                    <!-- Detail Cards -->
+                    <div class="grid grid-cols-2 gap-4">
+                        {
+                            product.details?.map((detail) => (
+                                <div class="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-white/5 backdrop-blur-sm">
+                                    <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">
+                                        {detail.label}
+                                    </p>
+                                    <p class="text-sm font-medium dark:text-white">
+                                        {detail.value}
+                                    </p>
+                                </div>
+                            ))
+                        }
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="space-y-4 pt-4">
+                        <button
+                            id="add-to-inquiry"
+                            class="w-full bg-primary hover:bg-primary/90 text-background-dark font-bold py-5 rounded-xl transition-all transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-3 shadow-xl shadow-primary/20"
+                            data-product-id={product.id}
+                        >
+                            <span class="material-symbols-outlined">mail</span>
+                            <span id="inquiry-text">ADD TO INQUIRY</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Info Tabs Section -->
+        <section class="mt-32">
+            <div
+                class="border-b border-slate-200 dark:border-white/10 mb-12 flex items-center h-16"
+            >
+                <span
+                    class="border-b-2 border-primary h-full flex items-center text-xs font-bold tracking-[0.2em] text-slate-900 dark:text-white uppercase"
+                >
+                    Specifications
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-20">
+                <div class="space-y-12">
+                    <div>
+                        <h3
+                            class="text-xs font-bold tracking-widest uppercase text-primary mb-6"
+                        >
+                            Technical Details
+                        </h3>
+                        <dl class="space-y-4">
+                            {
+                                product.specifications?.map((spec) => (
+                                    <div class="flex justify-between py-3 border-b border-slate-100 dark:border-white/5">
+                                        <dt class="text-sm text-slate-500">
+                                            {spec.label}
+                                        </dt>
+                                        <dd class="text-sm font-medium dark:text-white">
+                                            {spec.value}
+                                        </dd>
+                                    </div>
+                                ))
+                            }
+                        </dl>
+                    </div>
+                </div>
+                <div class="space-y-8">
+                    <h3
+                        class="text-xs font-bold tracking-widest uppercase text-primary mb-6"
+                    >
+                        Care Instructions
+                    </h3>
+                    <div
+                        class="prose prose-invert prose-sm text-slate-500 dark:text-slate-400 leading-relaxed"
+                    >
+                        <ul class="list-disc pl-5 space-y-3">
+                            {
+                                product.careInstructions?.map((instr) => (
+                                    <li>{instr}</li>
+                                ))
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommended / Related Items -->
+        <section
+            class="mt-32 pt-32 border-t border-slate-200 dark:border-white/10"
+        >
+            <div class="flex items-end justify-between mb-12">
+                <div>
+                    <span
+                        class="text-xs font-bold tracking-[0.3em] uppercase text-primary mb-2 block"
+                        >Curation</span
+                    >
+                    <h2 class="text-3xl font-bold dark:text-white">
+                        Similar Masterpieces
+                    </h2>
+                </div>
+                <a
+                    class="text-sm font-bold uppercase tracking-widest text-primary hover:underline decoration-2 underline-offset-4 transition-all"
+                    href="/search">View All Products</a
+                >
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {relatedProducts.map((rel) => <ProductCard {...rel} />)}
+            </div>
+        </section>
+    </main>
+</Layout>
+
+<!-- Zoom Modal -->
+<div
+    id="zoom-modal"
+    class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-background-dark/95 backdrop-blur-xl p-4 sm:p-10 cursor-zoom-out"
+>
+    <button
+        id="close-zoom"
+        class="absolute top-8 right-8 text-white hover:text-primary transition-colors"
+    >
+        <span class="material-symbols-outlined text-4xl">close</span>
+    </button>
+    <img
+        id="zoomed-image"
+        src={product.image}
+        alt={product.title}
+        class="max-w-full max-h-full object-contain rounded-xl shadow-2xl transition-transform duration-500 ease-out"
+    />
+</div>
+
+<script>
+    const mainImage = document.getElementById(
+        "main-product-image",
+    ) as HTMLImageElement;
+    const thumbnails = document.querySelectorAll(".thumbnail");
+    const zoomBtn = document.getElementById("zoom-button");
+    const zoomModal = document.getElementById("zoom-modal");
+    const closeZoom = document.getElementById("close-zoom");
+    const zoomedImg = document.getElementById(
+        "zoomed-image",
+    ) as HTMLImageElement;
+    const inquiryBtn = document.getElementById("add-to-inquiry");
+    const inquiryText = document.getElementById("inquiry-text");
+
+    // Thumbnail functionality
+    thumbnails.forEach((thumb) => {
+        thumb.addEventListener("click", () => {
+            const newSrc = thumb.getAttribute("data-image");
+            if (newSrc && mainImage) {
+                mainImage.src = newSrc;
+                if (zoomedImg) zoomedImg.src = newSrc;
+
+                thumbnails.forEach((t) => {
+                    t.classList.remove(
+                        "border-2",
+                        "border-primary",
+                        "active",
+                        "shadow-lg",
+                    );
+                    t.classList.add(
+                        "border",
+                        "border-slate-200",
+                        "dark:border-white/10",
+                    );
+                });
+                thumb.classList.add(
+                    "border-2",
+                    "border-primary",
+                    "active",
+                    "shadow-lg",
+                );
+                thumb.classList.remove(
+                    "border",
+                    "border-slate-200",
+                    "dark:border-white/10",
+                );
+            }
+        });
+    });
+
+    // Zoom functionality
+    const openZoom = () => {
+        zoomModal?.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+    };
+
+    const closeZoomModal = () => {
+        zoomModal?.classList.add("hidden");
+        document.body.style.overflow = "";
+    };
+
+    zoomBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openZoom();
+    });
+
+    closeZoom?.addEventListener("click", closeZoomModal);
+    zoomModal?.addEventListener("click", closeZoomModal);
+
+    // Inquiry functionality
+    inquiryBtn?.addEventListener("click", () => {
+        const productId = inquiryBtn.dataset.productId;
+        if (productId) {
+            const inquiries = JSON.parse(
+                localStorage.getItem("product_inquiries") || "[]",
+            );
+            if (!inquiries.includes(productId)) {
+                inquiries.push(productId);
+                localStorage.setItem(
+                    "product_inquiries",
+                    JSON.stringify(inquiries),
+                );
+            }
+
+            if (inquiryText) inquiryText.textContent = "ADDED";
+            inquiryBtn.classList.add(
+                "bg-slate-700",
+                "text-white",
+                "pointer-events-none",
+            );
+            inquiryBtn.classList.remove("bg-primary", "text-background-dark");
+        }
+    });
+
+    // Check if already added on load
+    const productId = inquiryBtn?.dataset.productId;
+    const inquiries = JSON.parse(
+        localStorage.getItem("product_inquiries") || "[]",
+    );
+    if (productId && inquiries.includes(productId)) {
+        if (inquiryText) inquiryText.textContent = "ADDED";
+        inquiryBtn?.classList.add(
+            "bg-slate-700",
+            "text-white",
+            "pointer-events-none",
+        );
+        inquiryBtn?.classList.remove("bg-primary", "text-background-dark");
+    }
+</script>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        height: 3px;
+        width: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(245, 214, 61, 0.2);
+        border-radius: 10px;
+    }
+</style>

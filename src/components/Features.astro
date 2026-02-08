@@ -1,0 +1,46 @@
+---
+const features = [
+    {
+        icon: "handyman",
+        title: "Artisan Crafted",
+        desc: "Every piece is handcrafted by skilled artisans with meticulous attention to detail.",
+    },
+    {
+        icon: "local_shipping",
+        title: "Pan-India Delivery",
+        desc: "Reliable shipping across all major cities with real-time tracking updates.",
+    },
+    {
+        icon: "inventory_2",
+        title: "Bulk Customization",
+        desc: "Tailored solutions for corporate gifting and weddings with custom branding.",
+    },
+    {
+        icon: "verified_user",
+        title: "Quality Materials",
+        desc: "We only use premium ethically sourced raw materials for all our creations.",
+    },
+];
+---
+
+<section class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div
+        class="grid grid-cols-1 md:grid-cols-4 gap-12 text-center md:text-left"
+    >
+        {
+            features.map((feature) => (
+                <div class="flex flex-col items-center md:items-start">
+                    <span class="material-symbols-outlined text-4xl text-primary mb-4">
+                        {feature.icon}
+                    </span>
+                    <h4 class="text-lg font-bold mb-2 dark:text-white">
+                        {feature.title}
+                    </h4>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm">
+                        {feature.desc}
+                    </p>
+                </div>
+            ))
+        }
+    </div>
+</section>

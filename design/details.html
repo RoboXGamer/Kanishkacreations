@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Product Details | Kanishka Creations</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f5d63d",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#121212",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 antialiased">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 border-b border-slate-200 dark:border-white/10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<!-- Logo -->
+<div class="flex items-center gap-3">
+<div class="bg-primary p-2 rounded-lg">
+<span class="material-symbols-outlined text-background-dark text-2xl" data-icon="brush">brush</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase">Kanishka <span class="text-primary/90">Creations</span></h2>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center gap-10">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-sm font-medium text-primary transition-colors border-b-2 border-primary pb-1" href="#">Products</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">About</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Contact</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-6">
+<button class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="relative text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 dark:bg-white/10 mx-2"></div>
+<div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/5 flex items-center justify-center overflow-hidden border border-slate-300 dark:border-white/10">
+<img class="w-full h-full object-cover" data-alt="User profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0elQkb77Hor4uvrjxIEeLU9NuXyKeQCFuyHru5SmbFFwMEC-iC1Jz2fsSGxbopg_3myPpCw48VPaQMI6uJYwnBSgh8kXryT40Cb4BMtRtptSOk5-kNkh9Mke2WciZ_rrQB2w4rfvyLwR_x4Sska8O3tdeFu4OIxO_-ktgtpjcw4wISKnhAkOyns9zFNQwF5jXI8FgAYO7TYRe5bbxoZ-l-M2speI6s54Q_PHc4VD1rSIJnjCTZKF8Wr_TMtNsNp-LHi59kIQ9ushy"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-12">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 mb-10 text-xs font-medium uppercase tracking-widest text-slate-500">
+<a class="hover:text-primary" href="#">Collection</a>
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+<a class="hover:text-primary" href="#">Brass Art</a>
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+<span class="text-slate-900 dark:text-white">Handcrafted Ganesha Sculpture</span>
+</nav>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+<!-- Left Side: Image Gallery -->
+<div class="lg:col-span-7 flex flex-col-reverse md:flex-row gap-6">
+<!-- Thumbnails -->
+<div class="flex md:flex-col gap-4">
+<div class="w-20 h-20 rounded-lg border-2 border-primary overflow-hidden cursor-pointer ring-offset-2 ring-offset-background-dark ring-2 ring-primary/20">
+<img class="w-full h-full object-cover" data-alt="Close up of brass ganesha sculpture detail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA09QBdF5UVqiIECp6n2fI7P6wVPc5q23N2aIgtRwohD0DmQh-b-HWpgp471AMLqIlvYKPPLe7xsLN95pEcW5BUY7pQ4h_Sdt2MZL5zKEhP7BfnGsfsVRZA-QkNMa9Mo8xQKQ2r3D2GHlplJqWsj2D0Ew-gIv8ltEvEDEhNXFxXPI-5QuqT_GbD0l8Zk7tw7qsePQWMAfJibmIDjpiXKJyx1V9j9_II_E-CH9EjAZ7UlO91LgJiPNeivKKtNpbNhp3f54JQERiWR7Kb"/>
+</div>
+<div class="w-20 h-20 rounded-lg border border-white/10 overflow-hidden cursor-pointer hover:border-primary/50 transition-colors">
+<img class="w-full h-full object-cover" data-alt="Side view of handcrafted brass sculpture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDSlOEGCnsHb35WOAGQPL9bSzjnDCuTduWFEHO_Ds8wMe7Lh-y8u61gMIWRd5OE2j2YgaxI7LJEbIfR1HMZKKoUgSQpjqTRtyaEEHpnDEjQqTW2e_BEWhYDrDE6xKZrUj9Wja7JCXn6EEw_l9Yl1nnNx0aF0JVpzYfPRdPRDnoPWw3QRjvhJq73XyuHOFzvYuiAnu5Yr4w0m34sbSFSj4FuVA38wXT97sbYRml4TnrPbFTUCEtAuAYM9ae7Y3_GZ4tVD-9aQI4VCrK"/>
+</div>
+<div class="w-20 h-20 rounded-lg border border-white/10 overflow-hidden cursor-pointer hover:border-primary/50 transition-colors">
+<img class="w-full h-full object-cover" data-alt="Macro texture of brass material" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANAE8virZQviR67beWAnwX-GYGOdrgpopGDrgLExYnZayEJ-QkzRhHFYoTAq1rkSwShNnAbcO3EooVDJeRjqrsrFcyJhpMcyCpBS24E5VjfFr6unEv2n-5eU50pUXMUa57gvQ7lqL3IUeGqrhwBWMTKRyg2aw6PoSsQArBveYNtNkEARCbEv2PWpZuKTWx1Uq0tc58GvisZR8IEzL0sVeG0ALN8HVpS8cf06IcHs1-m7jDwNI7i-PeTo66AGs_I4aMjiB2TfHoZ3ck"/>
+</div>
+<div class="w-20 h-20 rounded-lg border border-white/10 overflow-hidden cursor-pointer hover:border-primary/50 transition-colors">
+<img class="w-full h-full object-cover" data-alt="Full view of the brass masterpiece" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5sr2xER4Q40fTqvhRbQrEMuqOhPeAEdt3j23rWEpCYerw1kKf-PZSxdilQpqI8KViWqLPf1qxU4OWFm-nMK7ACVGxhN5d2rzcL7PwGBC2jx4plpcRu8j26VSVIzc5BeCkzVOThyShqO9cbr90900csQgtmcUyF2FyGMlgiOoe0ef53fGHBn8lSqwOOFdx99leJUvgp3mIhK7kJ9JZxLwfAWVvrVRWujTTjy-soyMEB17CbXHC_ECsZyYrXqimXhw65JDr06Y6PxJZ"/>
+</div>
+</div>
+<!-- Main Image -->
+<div class="flex-1">
+<div class="aspect-[4/5] rounded-xl overflow-hidden bg-white/5 border border-white/10 relative group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="High resolution main product image of brass sculpture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzkTI610kPobX9chz5oSTeJuKg0dV7Il_me5mvugzUa5nolv0JmXPfb08owCIkniJkcjwtQs_borWg1G3gDDnsEvryeUIriq_rM9YsvuOqIjzW5paj3IjBtJLoc9x68vDjY-wukWMYAtYTc9vC0wbBbMCTfZ221TSjKqBc7NEUHYrNXHaPmA-brgpD62i30A1MA4Rs4V-FL7NSk3pgACAni5KgRoSOdja9kWVQWUtLJlIiafrbOjiMdetZb9m2AkSG7JapumFAAPsy"/>
+<div class="absolute bottom-6 right-6">
+<button class="bg-background-dark/60 backdrop-blur-md p-3 rounded-full border border-white/20 text-white hover:bg-primary hover:text-background-dark transition-all">
+<span class="material-symbols-outlined" data-icon="fullscreen">fullscreen</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: Product Details -->
+<div class="lg:col-span-5 flex flex-col justify-center">
+<div class="space-y-8">
+<header>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1">star_half</span>
+</div>
+<span class="text-xs font-medium text-slate-500 uppercase tracking-widest">(42 Reviews)</span>
+</div>
+<h1 class="text-4xl md:text-5xl font-bold dark:text-white text-slate-900 leading-tight mb-4">
+                            Handcrafted Brass <br/>Lord Ganesha
+                        </h1>
+<p class="text-slate-500 dark:text-slate-400 leading-relaxed max-w-md">
+                            A masterpiece of artisanal heritage. This 12-inch sculpture is sand-casted from premium recycled brass and hand-finished with a dark antique patina. Each piece carries unique variations from the artisan's touch.
+                        </p>
+</header>
+<div class="flex items-center gap-4">
+<span class="text-3xl font-bold text-primary">$1,245.00</span>
+<span class="text-lg text-slate-400 line-through">$1,550.00</span>
+<span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded tracking-tighter uppercase">Save 20%</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-white/5">
+<p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">Material</p>
+<p class="text-sm font-medium dark:text-white">Ancient Brass Alloy</p>
+</div>
+<div class="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-white/5">
+<p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">Finish</p>
+<p class="text-sm font-medium dark:text-white">Antique Bronze Patina</p>
+</div>
+</div>
+<div class="space-y-4 pt-4">
+<button class="w-full bg-primary hover:bg-primary/90 text-background-dark font-bold py-5 rounded-lg transition-all transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-3 shadow-xl shadow-primary/10">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+                            ADD TO INQUIRY
+                        </button>
+<button class="w-full bg-transparent border border-slate-300 dark:border-white/20 hover:border-primary/50 text-slate-700 dark:text-white font-semibold py-5 rounded-lg transition-all flex items-center justify-center gap-3">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+                            REQUEST SHIPPING QUOTE
+                        </button>
+</div>
+<div class="flex items-center gap-6 pt-4 border-t border-slate-200 dark:border-white/10">
+<div class="flex items-center gap-2 text-xs font-medium text-slate-500 uppercase tracking-widest">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="verified_user">verified_user</span>
+                            Authenticity Certified
+                        </div>
+<div class="flex items-center gap-2 text-xs font-medium text-slate-500 uppercase tracking-widest">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="globe">globe</span>
+                            Worldwide Delivery
+                        </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed Info Tabs Section -->
+<section class="mt-32">
+<div class="border-b border-slate-200 dark:border-white/10 mb-12 flex items-center gap-12">
+<button class="pb-6 border-b-2 border-primary text-sm font-bold tracking-[0.2em] text-slate-900 dark:text-white uppercase transition-all">
+                    Specifications
+                </button>
+<button class="pb-6 border-b-2 border-transparent text-sm font-bold tracking-[0.2em] text-slate-400 hover:text-primary uppercase transition-all">
+                    Reviews (42)
+                </button>
+<button class="pb-6 border-b-2 border-transparent text-sm font-bold tracking-[0.2em] text-slate-400 hover:text-primary uppercase transition-all">
+                    Artisan Story
+                </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-20">
+<div class="space-y-12">
+<div>
+<h3 class="text-xs font-bold tracking-widest uppercase text-primary mb-6">Technical Details</h3>
+<dl class="space-y-4">
+<div class="flex justify-between py-3 border-b border-slate-100 dark:border-white/5">
+<dt class="text-sm text-slate-500">Dimensions</dt>
+<dd class="text-sm font-medium dark:text-white">12" H x 8" W x 6" D</dd>
+</div>
+<div class="flex justify-between py-3 border-b border-slate-100 dark:border-white/5">
+<dt class="text-sm text-slate-500">Weight</dt>
+<dd class="text-sm font-medium dark:text-white">4.2 kg (approx. 9.3 lbs)</dd>
+</div>
+<div class="flex justify-between py-3 border-b border-slate-100 dark:border-white/5">
+<dt class="text-sm text-slate-500">Material Composition</dt>
+<dd class="text-sm font-medium dark:text-white">85% Copper, 15% Zinc/Tin</dd>
+</div>
+<div class="flex justify-between py-3 border-b border-slate-100 dark:border-white/5">
+<dt class="text-sm text-slate-500">Casting Method</dt>
+<dd class="text-sm font-medium dark:text-white">Lost-Wax Sand Casting</dd>
+</div>
+</dl>
+</div>
+</div>
+<div class="space-y-8">
+<h3 class="text-xs font-bold tracking-widest uppercase text-primary mb-6">Care Instructions</h3>
+<div class="prose prose-invert prose-sm text-slate-400 leading-relaxed space-y-4">
+<p>This piece has been treated with a protective wax finish to preserve its antique look. To maintain the sculpture:</p>
+<ul class="list-disc pl-5 space-y-2">
+<li>Dust regularly with a soft, dry micro-fiber cloth.</li>
+<li>Avoid using chemical cleaners or abrasive materials.</li>
+<li>Keep away from high-moisture environments to prevent oxidation.</li>
+<li>Apply a thin layer of furniture-grade clear wax once a year for added protection.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- Recommended / Related Items -->
+<section class="mt-32 pt-32 border-t border-slate-200 dark:border-white/10">
+<div class="flex items-end justify-between mb-12">
+<div>
+<span class="text-xs font-bold tracking-[0.3em] uppercase text-primary mb-2 block">Curation</span>
+<h2 class="text-3xl font-bold dark:text-white">Similar Masterpieces</h2>
+</div>
+<a class="text-sm font-bold uppercase tracking-widest text-primary hover:underline transition-all" href="#">View All Products</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Related Item 1 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] rounded-lg overflow-hidden bg-white/5 border border-white/10 mb-4 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Brass Peacock sculpture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3VUrPYdw444yMQh2ZpGSiJD7NtrR85Pbh1zEobijn0fRViPzQZeUT704SEhgafBlSL4_PAPHiGp8bOEC5rnv2EwTdWGUHy4Ny0WW8TDJPvnCtbIftJNWmmSeDzBAcVOE9qOzjV_Bu2iZJlQ-A_7XCTNK9TNZrQ-emhD4cGU7Zc44Wsmfq0GFEQU56tGH8CNK86_z7WVC3Y9KKLoxEaGYEQZU8iKKHxpxvzKwwH509_c-A3STxIaAW_pCaSN4iOE7UsPfg9l2TfmA7"/>
+<div class="absolute inset-0 bg-background-dark/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary text-background-dark px-4 py-2 text-xs font-bold rounded-full">QUICK VIEW</button>
+</div>
+</div>
+<h4 class="font-semibold dark:text-white text-slate-900 group-hover:text-primary transition-colors">Ornate Brass Peacock</h4>
+<p class="text-primary font-bold text-sm">$850.00</p>
+</div>
+<!-- Related Item 2 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] rounded-lg overflow-hidden bg-white/5 border border-white/10 mb-4 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Traditional Brass Diya Lamp" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPbpJXoeNzwAoQ1yWk1Ue165ToktH9poPj4-ENPgqifsh6yfhZMoXS9cKHxVV9FdFc579SuySJht6Elb0WIF3DVsHW1TefZC1woy8AQVk0omwM76YARanC-a7oJkmB7gbJjUaphKyYew6uziePQ8xixkm0xhFr8EvO0wD5OkdG_LbdlxRkG3ggBBW_EUbUVWFNgtVJYHqDiXEa5hYaKCZGhernH10g4YmVBKIQmzkT5ab7GFrV3ufP0uocHHP5-z38wu5ms-WznRvW"/>
+<div class="absolute inset-0 bg-background-dark/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary text-background-dark px-4 py-2 text-xs font-bold rounded-full">QUICK VIEW</button>
+</div>
+</div>
+<h4 class="font-semibold dark:text-white text-slate-900 group-hover:text-primary transition-colors">Classic Ritual Diya</h4>
+<p class="text-primary font-bold text-sm">$320.00</p>
+</div>
+<!-- Related Item 3 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] rounded-lg overflow-hidden bg-white/5 border border-white/10 mb-4 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Antique Wall Hanging Brass Art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr6WHT8xmjU4fKGKsrKI398fBrk-YoPBDfSV9nrzyugy8zAYIh9uj-wfq4W020lVB04e7joOwZXpqC4hwZUIviqsfOR0SyGuvq7x3MHtN9uh71exFm1qWGmlSgcdDB6koyKunKt46A8gASO_zBd0b0O4gSfbLl2W8vzH4H3o_SCKAQIZP1izLcYpAY9N9vXldfWv1FN4SCRrhxjM35mgcgMuRzhfFUq9Vh-fBzSsw924r1m40qYAHqb2eefbwYOOIMlmw1OIulw3z4"/>
+<div class="absolute inset-0 bg-background-dark/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary text-background-dark px-4 py-2 text-xs font-bold rounded-full">QUICK VIEW</button>
+</div>
+</div>
+<h4 class="font-semibold dark:text-white text-slate-900 group-hover:text-primary transition-colors">Vedic Sun Wall Art</h4>
+<p class="text-primary font-bold text-sm">$590.00</p>
+</div>
+<!-- Related Item 4 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] rounded-lg overflow-hidden bg-white/5 border border-white/10 mb-4 relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Abstract Brass Figure" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV37RjTrEhq5m7TtufspHdHuv_MbLSLWftbyTOXc3pF_AYbYtuxZWSbgj6_nm6JX_k2i_tsdzIeeAvebkGg8i71Zxz8eSr8cAFKQmprBUPCC1N9WeRZeJj_BsUREBbP8yegPFbTsDTImZHMPEkw1TQNcAgRvjz6CaPzIy4Om0JnXajwQQkNVBj9waCKuUFp4XsxnW767ByoDkVHsy6lP6cLW1xX5aJsBe7buCZfY3YRQmVRdhxMlk-X7TEFtjdcP764reFFCvZKdoy"/>
+<div class="absolute inset-0 bg-background-dark/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary text-background-dark px-4 py-2 text-xs font-bold rounded-full">QUICK VIEW</button>
+</div>
+</div>
+<h4 class="font-semibold dark:text-white text-slate-900 group-hover:text-primary transition-colors">Contemporary Fluid Form</h4>
+<p class="text-primary font-bold text-sm">$1,100.00</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Simple Footer -->
+<footer class="bg-slate-100 dark:bg-black/40 py-16 mt-32 border-t border-slate-200 dark:border-white/10">
+<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="md:col-span-1">
+<div class="flex items-center gap-3 mb-6">
+<div class="bg-primary p-2 rounded-lg">
+<span class="material-symbols-outlined text-background-dark text-xl" data-icon="brush">brush</span>
+</div>
+<h2 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white uppercase">Kanishka</h2>
+</div>
+<p class="text-sm text-slate-500 leading-relaxed">Preserving the timeless heritage of handcrafted Indian brass art for a modern world.</p>
+</div>
+<div>
+<h5 class="text-sm font-bold dark:text-white uppercase tracking-widest mb-6">Shop</h5>
+<ul class="space-y-4 text-sm text-slate-500 font-medium">
+<li><a class="hover:text-primary transition-colors" href="#">New Arrivals</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Brass Sculptures</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Home Decor</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Limited Editions</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-sm font-bold dark:text-white uppercase tracking-widest mb-6">Support</h5>
+<ul class="space-y-4 text-sm text-slate-500 font-medium">
+<li><a class="hover:text-primary transition-colors" href="#">Shipping Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Inquiry Process</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Authenticity Check</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact Artisan</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-sm font-bold dark:text-white uppercase tracking-widest mb-6">Newsletter</h5>
+<p class="text-xs text-slate-500 mb-4 uppercase tracking-widest font-bold">Join the Circle</p>
+<div class="flex gap-2">
+<input class="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 rounded focus:ring-primary focus:border-primary text-sm flex-1" placeholder="Email address" type="email"/>
+<button class="bg-primary text-background-dark px-4 rounded font-bold transition-all hover:bg-primary/80">
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-slate-200 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-xs text-slate-500">© 2024 Kanishka Creations Art Studio. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-slate-500 hover:text-primary" href="#"><span class="material-symbols-outlined text-lg" data-icon="facebook">social_leaderboard</span></a>
+<a class="text-slate-500 hover:text-primary" href="#"><span class="material-symbols-outlined text-lg" data-icon="instagram">camera</span></a>
+<a class="text-slate-500 hover:text-primary" href="#"><span class="material-symbols-outlined text-lg" data-icon="pinterest">palette</span></a>
+</div>
+</div>
+</footer>
+</body></html>

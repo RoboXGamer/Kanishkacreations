@@ -1,0 +1,83 @@
+---
+import categories from "../data/categories.json";
+
+const shopLinks = categories;
+---
+
+<footer
+    class="bg-slate-100 dark:bg-black/40 pt-20 pb-10 border-t border-white/5"
+>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
+            <div class="md:col-span-5">
+                <a href="/" class="flex items-center gap-2 mb-6">
+                    <span
+                        class="material-symbols-outlined text-primary text-3xl"
+                        >diamond</span
+                    >
+                    <h2
+                        class="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase"
+                    >
+                        Kanishka <span class="text-primary">Creations</span>
+                    </h2>
+                </a>
+                <p
+                    class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6"
+                >
+                    Bringing premium craftsmanship and elegant designs to your
+                    doorstep. Specializing in handmade accessories and luxury
+                    corporate gifts.
+                </p>
+            </div>
+            <div class="md:col-span-3">
+                <h3 class="font-bold mb-6 text-slate-900 dark:text-white">
+                    Shop Links
+                </h3>
+                <ul
+                    class="space-y-4 text-slate-500 dark:text-slate-400 text-sm"
+                >
+                    {
+                        shopLinks.map((link) => (
+                            <li>
+                                <a
+                                    class="hover:text-primary transition-colors"
+                                    href={`/search?category=${link.id}`}
+                                >
+                                    {link.title}
+                                </a>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </div>
+            <div class="md:col-span-4">
+                <h3 class="font-bold mb-6 text-slate-900 dark:text-white">
+                    Email us for any query
+                </h3>
+                <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">
+                    Reach out to us at <a
+                        href="mailto:sales@kc-creations.in"
+                        class="text-primary hover:underline"
+                        >sales@kc-creations.in</a
+                    >
+                </p>
+                <div class="flex flex-col gap-2">
+                    <a
+                        href="mailto:sales@kc-creations.in"
+                        class="bg-primary text-background-dark font-bold py-2.5 rounded-lg text-sm hover:bg-primary/90 transition-all text-center"
+                        >Email us</a
+                    >
+                </div>
+            </div>
+        </div>
+        <div
+            class="pt-10 border-t border-slate-200 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium"
+        >
+            <p>© 2026 Kanishka Creations. All rights reserved.</p>
+            <div class="flex gap-6 uppercase tracking-widest">
+                <a class="hover:text-white" href="/coming-soon">Terms</a>
+                <a class="hover:text-white" href="/coming-soon">Sitemap</a>
+            </div>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,82 @@
+---
+import categoriesData from "../data/categories.json";
+
+const categories = categoriesData.map((cat) => ({
+    ...cat,
+    items:
+        cat.id === "raw-materials"
+            ? [
+                  "Premium Glass Beads",
+                  "Imported Silk Fabrics",
+                  "Alloy Metal Bases",
+              ]
+            : cat.id === "hair-accessories"
+              ? [
+                    "Luxury Silk Scrunchies",
+                    "Embellished Headbands",
+                    "Artisan Hair Clips",
+                ]
+              : [
+                    "Custom Brand Gifting",
+                    "Luxury Hampers",
+                    "Corporate Solutions",
+                ],
+    image:
+        cat.id === "raw-materials"
+            ? "https://lh3.googleusercontent.com/aida-public/AB6AXuCnXkDBB2iVaXStqTWGGkY1su-8FLE-vOpI_OfgbG7UocDH7olYpr34_vzrZv3JN4yQR_gJCtUKf-Jw-c4K1_Gt77b94nb44dmv4KKht1Xm2iQSJGxRY22q_Ijn3nojjZW1rNhzQMtnsQS0jrsZOH-lLrsiW_5NgSDY0l2PkDbI9f4Xz0gwmgezV3IQAapkU6xADNFfTHDlI83vwRJDnB6xZ9hy0ZoL9sxOY2j_Jb0mzQfZWgWgg0Ubh0MyjljGvCQ7ueXYb6ttJiqj"
+            : cat.id === "hair-accessories"
+              ? "https://lh3.googleusercontent.com/aida-public/AB6AXuAedzis2GjD7e0PpGmRy37ospaKt7iMZ-LWKKGMwzd_oD9cU2qhqsEcYelIJDJJUHcNYbzZWK5h8g-U7zWlw6N-LH6BKx7wvGOF7pF2rEzM0wwxAHfh2ifrWMM674xl59k9mnqfK6LNzpo_soz1TqTU4_FqAfpZf6HZY_uZJDwQS7f-wWZW2GWPE8Sgqg3PtV4grnd-TZ02IL07BwEcE9TxZUdy7-k3bzOK36WO-THpIJdHAHvPgYQK3jitde6_vtsajgibwg5Rz2oz"
+              : "https://lh3.googleusercontent.com/aida-public/AB6AXuB6dFe6l_7tpPiNbVYAJ1mNM2sE7x8mAkgdmlcvri5-7IlFQuziJtp4Gwp_aQ3hx_eho-BLJFBKpHBC9Ubi85HO5gGOvZY5PG1VW3IGH79c7PmQV4jfinNmaSc71abBz8Pf1lEx3DAtEwFN_tKxSU0-F8TmngEkKXghWNV6rkhVP6ds-5qE7RAhjZ3sCyNUnl8wAnLAFTRKocSVr1NErFhCxFK8fniX7mvTMUFdSj3_0ooqxZ-jV3xDiRZrekrIJytS8e-bf_uFbkUp",
+    btnText:
+        cat.id === "raw-materials"
+            ? "Explore Materials"
+            : cat.id === "hair-accessories"
+              ? "Explore Style"
+              : "Corporate Enquiry",
+}));
+---
+
+<section class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" id="categories">
+    <div
+        class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4"
+    >
+        <div>
+            <h2 class="text-3xl font-bold dark:text-white">
+                Shop by <span class="text-primary">Category</span>
+            </h2>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {
+            categories.map((cat) => (
+                <div class="group relative overflow-hidden rounded-xl bg-slate-100 dark:bg-white/5 border border-white/5 p-8 h-[450px] flex flex-col justify-end transition-all hover:shadow-2xl hover:shadow-primary/5">
+                    <div
+                        class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-100"
+                        style={`background-image: url('${cat.image}');`}
+                    />
+                    <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/40 to-transparent" />
+                    <div class="relative z-10 text-left">
+                        <h3 class="text-2xl font-bold text-white mb-4">
+                            {cat.title}
+                        </h3>
+                        <ul class="space-y-2 mb-6">
+                            {cat.items.map((item) => (
+                                <li class="text-slate-300 text-sm flex items-center gap-2">
+                                    <span class="h-1 w-1 bg-primary rounded-full" />
+                                    {item}
+                                </li>
+                            ))}
+                        </ul>
+                        <a
+                            href={`/search?category=${cat.id}`}
+                            class="block w-full py-3 bg-white/10 hover:bg-primary hover:text-background-dark text-white font-bold rounded-lg backdrop-blur-md transition-all text-sm uppercase tracking-wider text-center"
+                        >
+                            {cat.btnText}
+                        </a>
+                    </div>
+                </div>
+            ))
+        }
+    </div>
+</section>

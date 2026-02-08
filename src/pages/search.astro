@@ -1,0 +1,325 @@
+---
+import Layout from "../layouts/Layout.astro";
+import SidebarFilters from "../components/SidebarFilters.astro";
+import SearchHeader from "../components/SearchHeader.astro";
+import ProductCard from "../components/ProductCard.astro";
+import products from "../data/products.json";
+import categories from "../data/categories.json";
+
+// Get params from URL for server-side initial render
+const url = new URL(Astro.request.url);
+const currentCategoryParam = url.searchParams.get("category") || "all";
+const searchParam = (url.searchParams.get("q") || "").toLowerCase();
+
+// Initial filter
+let initialProducts = products;
+if (currentCategoryParam !== "all") {
+    initialProducts = products.filter(
+        (p) => p.categoryId === currentCategoryParam,
+    );
+}
+if (searchParam) {
+    initialProducts = initialProducts.filter((p) =>
+        p.title.toLowerCase().includes(searchParam),
+    );
+}
+---
+
+<Layout title="Collections | Kanishka Creations">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="flex flex-col lg:flex-row gap-12">
+            <!-- Sidebar -->
+            <SidebarFilters />
+
+            <!-- Content Area -->
+            <div class="flex-1">
+                <SearchHeader
+                    title="All Collections"
+                    itemsCount={initialProducts.length}
+                    category={currentCategoryParam === "all"
+                        ? "All Products"
+                        : categories.find((c) => c.id === currentCategoryParam)
+                              ?.title || "Category"}
+                />
+
+                <div
+                    id="product-grid"
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8"
+                >
+                    {
+                        products.map((product) => (
+                            <div
+                                class="product-item"
+                                data-category={product.categoryId}
+                                data-price={parseFloat(
+                                    product.price.replace(/[^\d.]/g, ""),
+                                )}
+                                data-title={product.title.toLowerCase()}
+                                style={
+                                    initialProducts.find(
+                                        (p) => p.id === product.id,
+                                    )
+                                        ? ""
+                                        : "display: none;"
+                                }
+                            >
+                                <ProductCard {...product} />
+                            </div>
+                        ))
+                    }
+                </div>
+
+                <!-- empty state -->
+                <div
+                    id="no-results"
+                    class={`${initialProducts.length === 0 ? "" : "hidden"} py-20 text-center`}
+                >
+                    <span
+                        class="material-symbols-outlined text-6xl text-slate-300 mb-4 font-light"
+                        >search_off</span
+                    >
+                    <h3 class="text-xl font-bold mb-2">No results found</h3>
+                    <p class="text-slate-500">
+                        Try adjusting your filters or search terms
+                    </p>
+                    <button
+                        id="clear-filters"
+                        class="mt-6 text-primary font-bold hover:underline"
+                        >Clear all filters</button
+                    >
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script define:vars={{ categories }}>
+    const productGrid = document.getElementById("product-grid");
+    const noResults = document.getElementById("no-results");
+    const paginationArea = document.getElementById("pagination-area");
+    const productItems = Array.from(document.querySelectorAll(".product-item"));
+    const categoryBtns = document.querySelectorAll(".category-btn");
+    const priceRange = document.getElementById("price-range");
+    const priceDisplay = document.getElementById("price-display");
+    const sortSelect = document.getElementById("sort-select");
+    const categoryDisplay = document.getElementById("category-display");
+    const itemsCountDisplay = document.getElementById("items-count-display");
+    const clearFiltersBtn = document.getElementById("clear-filters");
+
+    // View toggle buttons
+    const gridViewBtn = document.querySelector(".grid-view-btn");
+    const listViewBtn = document.querySelector(".list-view-btn");
+
+    let currentCategory = "all";
+    let currentMaxPrice = 10000;
+    let searchQuery = "";
+    let currentView = "grid";
+
+    function updateFilters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        currentCategory = urlParams.get("category") || "all";
+        searchQuery = (urlParams.get("q") || "").toLowerCase();
+
+        // Update UI state for buttons
+        categoryBtns.forEach((btn) => {
+            if (btn.dataset.category === currentCategory) {
+                btn.classList.add("active");
+            } else {
+                btn.classList.remove("active");
+            }
+        });
+
+        // Update Category Display text
+        const catObj = categories.find((c) => c.id === currentCategory);
+        if (categoryDisplay)
+            categoryDisplay.textContent = catObj
+                ? catObj.title
+                : "All Products";
+
+        // Filter products
+        let visibleCount = 0;
+        productItems.forEach((item) => {
+            const cat = item.dataset.category;
+            const price = parseFloat(item.dataset.price);
+            const title = item.dataset.title;
+
+            const matchesCategory =
+                currentCategory === "all" || cat === currentCategory;
+            const matchesPrice = price <= currentMaxPrice;
+            const matchesSearch = !searchQuery || title.includes(searchQuery);
+
+            if (matchesCategory && matchesPrice && matchesSearch) {
+                item.style.display = "block";
+                visibleCount++;
+            } else {
+                item.style.display = "none";
+            }
+        });
+
+        if (itemsCountDisplay) itemsCountDisplay.textContent = visibleCount;
+
+        if (visibleCount === 0) {
+            if (productGrid) productGrid.classList.add("hidden");
+            if (noResults) noResults.classList.remove("hidden");
+            if (paginationArea) paginationArea.classList.add("hidden");
+        } else {
+            if (productGrid) productGrid.classList.remove("hidden");
+            if (noResults) noResults.classList.add("hidden");
+            if (paginationArea) paginationArea.classList.remove("hidden");
+        }
+    }
+
+    function setView(view) {
+        if (!gridViewBtn || !listViewBtn || !productGrid) return;
+        currentView = view;
+        if (view === "grid") {
+            productGrid.className =
+                "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8";
+            gridViewBtn.classList.add(
+                "bg-slate-200",
+                "dark:bg-white/10",
+                "text-slate-900",
+                "dark:text-white",
+            );
+            gridViewBtn.classList.remove(
+                "text-slate-500",
+                "hover:bg-slate-100",
+                "dark:hover:bg-white/5",
+            );
+            listViewBtn.classList.remove(
+                "bg-slate-200",
+                "dark:bg-white/10",
+                "text-slate-900",
+                "dark:text-white",
+            );
+            listViewBtn.classList.add(
+                "text-slate-500",
+                "hover:bg-slate-100",
+                "dark:hover:bg-white/5",
+            );
+
+            // Revert cards to grid style
+            productItems.forEach((item) => {
+                const card = item.querySelector("a");
+                card.classList.remove(
+                    "flex",
+                    "flex-col",
+                    "sm:flex-row",
+                    "gap-6",
+                    "items-start",
+                );
+                const imgContainer = card.querySelector("div");
+                imgContainer.classList.remove("sm:w-64", "shrink-0");
+                imgContainer.classList.add("aspect-square");
+            });
+        } else {
+            productGrid.className = "flex flex-col gap-6";
+            listViewBtn.classList.add(
+                "bg-slate-200",
+                "dark:bg-white/10",
+                "text-slate-900",
+                "dark:text-white",
+            );
+            listViewBtn.classList.remove(
+                "text-slate-500",
+                "hover:bg-slate-100",
+                "dark:hover:bg-white/5",
+            );
+            gridViewBtn.classList.remove(
+                "bg-slate-200",
+                "dark:bg-white/10",
+                "text-slate-900",
+                "dark:text-white",
+            );
+            gridViewBtn.classList.add(
+                "text-slate-500",
+                "hover:bg-slate-100",
+                "dark:hover:bg-white/5",
+            );
+
+            // Apply list style to cards
+            productItems.forEach((item) => {
+                const card = item.querySelector("a");
+                card.classList.add(
+                    "flex",
+                    "flex-col",
+                    "sm:flex-row",
+                    "gap-6",
+                    "items-start",
+                );
+                const imgContainer = card.querySelector("div");
+                imgContainer.classList.remove("aspect-square");
+                imgContainer.classList.add(
+                    "sm:w-64",
+                    "shrink-0",
+                    "aspect-video",
+                    "sm:aspect-square",
+                );
+            });
+        }
+    }
+
+    // Event Listeners
+    categoryBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const cat = btn.dataset.category;
+            const url = new URL(window.location.href);
+            if (cat === "all") {
+                url.searchParams.delete("category");
+            } else {
+                url.searchParams.set("category", cat);
+            }
+            window.history.pushState({}, "", url);
+            updateFilters();
+        });
+    });
+
+    if (priceRange) {
+        priceRange.addEventListener("input", (e) => {
+            currentMaxPrice = parseInt(e.target.value);
+            if (priceDisplay)
+                priceDisplay.textContent = `₹${currentMaxPrice.toLocaleString()}${currentMaxPrice === 10000 ? "+" : ""}`;
+            updateFilters();
+        });
+    }
+
+    if (sortSelect) {
+        sortSelect.addEventListener("change", (e) => {
+            const val = e.target.value;
+            const sorted = [...productItems].sort((a, b) => {
+                const priceA = parseFloat(a.dataset.price);
+                const priceB = parseFloat(b.dataset.price);
+                if (val === "price-low") return priceA - priceB;
+                if (val === "price-high") return priceB - priceA;
+                return 0;
+            });
+
+            sorted.forEach((item) => productGrid.appendChild(item));
+        });
+    }
+
+    if (gridViewBtn)
+        gridViewBtn.addEventListener("click", () => setView("grid"));
+    if (listViewBtn)
+        listViewBtn.addEventListener("click", () => setView("list"));
+
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener("click", () => {
+            const url = new URL(window.location.href);
+            url.searchParams.delete("category");
+            url.searchParams.delete("q");
+            window.history.pushState({}, "", url);
+            currentMaxPrice = 10000;
+            if (priceRange) priceRange.value = 10000;
+            if (priceDisplay) priceDisplay.textContent = "₹10,000+";
+            updateFilters();
+        });
+    }
+
+    // Initial run
+    updateFilters();
+    setView("grid");
+
+    // Listen for back/forward buttons
+    window.addEventListener("popstate", updateFilters);
+</script>

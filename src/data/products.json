@@ -1,0 +1,287 @@
+[
+    {
+        "id": "p1",
+        "category": "Hair Accessories",
+        "categoryId": "hair-accessories",
+        "title": "Velvet Pearl Embellished Clip",
+        "price": "₹899.00",
+        "originalPrice": "₹1,200.00",
+        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuDQ_mzocLs_5rS-IYxDCFVr6LTX6-CUCHSeoCenyn2PpqmJgK5TbXI4kZsNntjD0jw4sdJvNJmr1h3-AuoxYYMQaMWETEfasYDFfG4tm8OI9tOJmAUfRTAdalOxgrskEI0CeZ4zVRJzliTLgHefUDRqkY4HqDpoc8R-HG2s5C3uPnS2BADW5yIIpfKAFL-OFI4KHkUEI408lRXDUHaWLyviWrCquc6e54YC6yMCndoDHGZISKzsLDR6WLjZakdUMoyQPAk1RZ8r_U5R",
+        "badge": "HOT SELLING",
+        "isBestSeller": true,
+        "description": "Premium velvet hair clip adorned with hand-stitched pearls. Perfect for adding a touch of elegance to any hairstyle, from casual days to festive occasions.",
+        "details": [
+            {
+                "label": "Material",
+                "value": "Premium Velvet & Faux Pearls"
+            },
+            {
+                "label": "Clip Type",
+                "value": "Alligator Clip"
+            }
+        ],
+        "specifications": [
+            {
+                "label": "Length",
+                "value": "3.5 Inches"
+            },
+            {
+                "label": "Weight",
+                "value": "15g"
+            },
+            {
+                "label": "Handmade",
+                "value": "Yes"
+            }
+        ],
+        "careInstructions": [
+            "Store in a cool, dry place.",
+            "Avoid contact with water and perfumes.",
+            "Clean with a soft, dry cloth."
+        ]
+    },
+    {
+        "id": "p2",
+        "category": "Hair Accessories",
+        "categoryId": "hair-accessories",
+        "title": "Silk Floral Pattern Scrunchie",
+        "price": "₹450.00",
+        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCscS3947m68_GjSjR70i-p3u0pM-I6K9S_v5N-S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S_M_S",
+        "isBestSeller": true,
+        "description": "Luxurious pure silk scrunchie with a unique floral artisan print. Designed to be gentle on your hair while keeping it securely in place.",
+        "details": [
+            {
+                "label": "Material",
+                "value": "100% Pure Silk"
+            },
+            {
+                "label": "Pattern",
+                "value": "Hand-printed Floral"
+            }
+        ],
+        "specifications": [
+            {
+                "label": "Diameter",
+                "value": "4 Inches"
+            },
+            {
+                "label": "Elasticity",
+                "value": "High Durability"
+            }
+        ],
+        "careInstructions": [
+            "Hand wash separately in cold water.",
+            "Use silk-friendly detergent.",
+            "Air dry only."
+        ]
+    },
+    {
+        "id": "p3",
+        "category": "Raw Materials",
+        "categoryId": "raw-materials",
+        "title": "Hand-woven Banarasi Silk Thread",
+        "price": "₹1,899.00",
+        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBP0-t4yFINIAH8MVNXI5ujoa7Xnb9ZUNzQUrp6ri0XtscZGTUom75Yl3gLgNopxdl5KXfe9TYtkzEJIk33ZlgcnvHQa3hehNh1M_q9c8rRrdYKZwPJLqT6jvLBpURn4FqP1LcFM9GHlBKm52OrCOZjVmeuG9a_GWtKjNGc8RfnZ_wtnTPQtQdcetv1CjetoaJ3OGUrgavAqARU0KhaaUv_cpwvkHN5zlHS6uNeh9E0LtRp_HqheRp973g2CtKtlH_HuyesDOqfSTwm",
+        "badge": "BESTSELLER",
+        "description": "Premium quality Banarasi silk thread, hand-woven and dyed using traditional methods. Ideal for high-end embroidery and jewelry making.",
+        "details": [
+            {
+                "label": "Fiber",
+                "value": "Pure Mulberry Silk"
+            },
+            {
+                "label": "Origin",
+                "value": "Varanasi, India"
+            }
+        ],
+        "specifications": [
+            {
+                "label": "Quantity",
+                "value": "100 Meters Spool"
+            },
+            {
+                "label": "Thickness",
+                "value": "Fine (3-ply)"
+            }
+        ],
+        "careInstructions": [
+            "Keep away from direct sunlight to prevent fading.",
+            "Store in an airtight container.",
+            "Dry clean creations made with this thread."
+        ]
+    },
+    {
+        "id": "p4",
+        "category": "Metalwork",
+        "categoryId": "raw-materials",
+        "title": "24K Gold Plated Brass Jhumka Base",
+        "price": "₹950.00",
+        "originalPrice": "₹1,250.00",
+        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuA4q8fTgQUmJSlGt6bYahlwUFdhOyIdpqtBfahdhFryyzbOLr1q9zGnwGFCQ651fBPOQSXLQ7-5OBmZmLUxKOCSv2avTbkF_BJfoSIxPNojUmfJ1zklr9qd2eMkFHrsFQKh52PxOvTRgfWiAOBIG5jQG4KObrgBn0Je-ZLwQ_PRolXpE5qPnf-w95WrbTxfwzoO5n88gvOa4BUJjnm6ddLc37xoAVL8ddDlF3RYS57P4JNXVFnMh8TI2NAK0IbJvi4RUbfJAHqloIs3",
+        "badge": "PREMIUM",
+        "description": "Exquisite 24K gold plated brass bases for traditional Jhumka earrings. Features intricate artisan carvings ready for your creative beadwork.",
+        "details": [
+            {
+                "label": "Base Metal",
+                "value": "Solid Brass"
+            },
+            {
+                "label": "Plating",
+                "value": "24K Genuine Gold"
+            }
+        ],
+        "specifications": [
+            {
+                "label": "Size",
+                "value": "25mm Diameter"
+            },
+            {
+                "label": "Weight",
+                "value": "8g per pair"
+            }
+        ],
+        "careInstructions": [
+            "Avoid contact with chemicals and moisture.",
+            "Wipe with a soft jewelry cloth after use.",
+            "Store in a jewelry pouch."
+        ]
+    },
+    {
+        "id": "p5",
+        "category": "Organic",
+        "categoryId": "raw-materials",
+        "title": "Polished Rosewood Round Beads Set",
+        "price": "₹680.00",
+        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCedkwOLFdMOm2P-Q6YeOOpzdiihw4CFl2r6UmNxulIUVGv7zIPDPM37FjGxu0sN8pnEJ5rC9ki74nrbbbtZ0T6zNlrL861nVgtWu1vaJpTm46RpBVv_msNTSCK0UffBHJZ73IrYfDu3ceYuUlt58SixkgAcrfR6ugMCFwpEBYGSAGqDsL8QOPmQ9zBFQ4z1VT-rJe9ZXkwT0ZIR-AIT_gDAYFp0usF16gZ2i93ZJYQVRN-04ncAynrQ-R4On6i6B7rMrw8E75PYKas",
+        "description": "Naturally sourced and high-polished rosewood beads. Uniform in size and color, perfect for boho-style jewelry and organic crafts.",
+        "details": [
+            {
+                "label": "Wood Type",
+                "value": "Indian Rosewood"
+            },
+            {
+                "label": "Finish",
+                "value": "Natural Beeswax Polish"
+            }
+        ],
+        "specifications": [
+            {
+                "label": "Quantity",
+                "value": "Pack of 50"
+            },
+            {
+                "label": "Size",
+                "value": "8mm Diameter"
+            }
+        ],
+        "careInstructions": [
+            "Wood may naturally darken over time.",
+            "Do not soak in water.",
+            "Toss with a drop of coconut oil to restore luster."
+        ]
+    },
+    {
+        "id": "p6",
+        "category": "Accessories",
+        "categoryId": "hair-accessories",
+        "title": "Emerald Crystal Hair Clip",
+        "price": "₹2,400.00",
+        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuB3IIQUKX4jlkFym8R14J843YkLtwWnfhn0UeaqgU8uf7oQNw6dz_DZcjlPk7kBBSVPFfQvqZsL42Wt7GNdy7IQ2xBypFCc4pLE95W68nMmxpxg9A8sgSFWtzASWSly2U1XcelaSyca8ixv5Mr8RjMq-jElmb1p643qJY5XMVuCZfZUd0D04gPdgwBgnT5L7G9ulBJ1HFMgeiIElx4Hjcb0_JuBBkDTiJ-OSnWZ-oWnsjdpGOizpjZa2J-i1SJv9F3moWhC_fawROoi",
+        "badge": "OUT OF STOCK",
+        "description": "Stunning statement hair clip featuring deep emerald-tone crystals set in a silver-plated alloy. A showstopper accessory for evening wear.",
+        "details": [
+            {
+                "label": "Stone",
+                "value": "Synthetic Emerald Crystal"
+            },
+            {
+                "label": "Metal",
+                "value": "Silver Plated Alloy"
+            }
+        ],
+        "specifications": [
+            {
+                "label": "Length",
+                "value": "4.2 Inches"
+            },
+            {
+                "label": "Stone Count",
+                "value": "12 Main Crystals"
+            }
+        ],
+        "careInstructions": [
+            "Handle with care to avoid dropping.",
+            "Store in a padded box.",
+            "Keep away from hairspray and perfumes."
+        ]
+    },
+    {
+        "id": "p7",
+        "category": "Supplies",
+        "categoryId": "raw-materials",
+        "title": "Pastel Dream Glass Bead Mix (500g)",
+        "price": "₹1,200.00",
+        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuDo4Wtv56G3kqQHu0I3xHVDjL7HtIBSRp9hHQNghX-EDA_dOWDF695lbGkqp0RVnKhtuAjuYcYEf4J8duj_dcbvZFfFCw69hhQwcuwxNaBtqqhui12T5tOhUy1wBnL7SZzk287RWLxWFiOOevtHxbVkbFrm_NwFsBrvd5PQXPnwfSeAbk0rNri9lVQKvWSJ2bOmx0wbQ6KDe0lAl9Foh08Nu2Trx4B1j7DeAtBTcjk5dy4E3-0g8NixEHkJPihdPtyxuACGTrO-v8np",
+        "description": "A curated mix of pastel glass beads in various shapes and sizes. Ideal for bulk jewelry production and beginner crafting projects.",
+        "details": [
+            {
+                "label": "Material",
+                "value": "Recycled Glass"
+            },
+            {
+                "label": "Colors",
+                "value": "Assorted Pastels"
+            }
+        ],
+        "specifications": [
+            {
+                "label": "Weight",
+                "value": "500g Bulk Pack"
+            },
+            {
+                "label": "Sizes",
+                "value": "2mm to 10mm"
+            }
+        ],
+        "careInstructions": [
+            "Washable in mild soapy water.",
+            "Dry thoroughly before use.",
+            "Keep away from small children."
+        ]
+    },
+    {
+        "id": "p8",
+        "category": "Gift Sets",
+        "categoryId": "corporate-gifting",
+        "title": "Executive Artisan Desk Hamper",
+        "price": "₹6,700.00",
+        "originalPrice": "₹8,500.00",
+        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBaasajftQ0-shcMwi13azCJgQEIWHlI2xcYTsQp9MrpXRlzBlAvkDnb_kxOKVX5iZJIQJpRMNz3FjV15qgmqHFNjnMTqRruUsAGNV9QkznrtKMOC6hdszmF5Ee1odi0p4krA_YCKR6w8Ku2IlnTxFBjYnQbem9LtYh7Pr06_IhhwVj-ActFRt_SeM6gIt1w6JI_3rRCH7NTDw2FKLyHNuT7n3tk4ewoTQEx2epMqGir2LWJb18BVVB9MXueiaE6AK8zS81BKuNkpmX",
+        "badge": "PREMIUM",
+        "description": "A luxury hampers designed for corporate leaders. Features a handcrafted brass paperweight, a silk notebook cover, and a selection of artisan teas.",
+        "details": [
+            {
+                "label": "Packaging",
+                "value": "Luxury Wooden Box"
+            },
+            {
+                "label": "Customization",
+                "value": "Available for Bulk Orders"
+            }
+        ],
+        "specifications": [
+            {
+                "label": "Items",
+                "value": "5 Premium Products"
+            },
+            {
+                "label": "Box Size",
+                "value": "12 x 10 x 4 Inches"
+            }
+        ],
+        "careInstructions": [
+            "Refer to individual item care cards inside.",
+            "Wipe box with a damp cloth if needed."
+        ]
+    }
+]
