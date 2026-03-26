@@ -1,46 +1,50 @@
-# Astro Starter Kit: Basics
+# Kanishka Creations
 
-```sh
-pnpm create astro@latest -- --template basics
+Astro storefront for a curated catalog backed by Convex, with an enquiry-only checkout flow and admin CRUD for products and categories.
+
+## Current stack
+
+- `Astro` for the storefront and server routes
+- `Convex` for customers, addresses, orders, order items, catalog content, and admin state
+- `Netlify` adapter for deployment
+
+## Current behavior
+
+- Catalog pages are rendered from Convex queries
+- Customers add items to a cart stored in browser local storage under `kc_cart_v1`
+- Checkout is enquiry-only:
+  - name + shipping address collected on-site
+  - no phone/email collected on-site
+  - order is persisted in Convex
+  - success page generates ready-to-send WhatsApp and email actions
+- Admin dashboards are available under `/admin`, `/admin/products`, `/admin/categories`, and `/admin/orders`
+
+## Environment variables
+
+- `PUBLIC_CHECKOUT_MODE=enquiry`
+- `PUBLIC_WHATSAPP_NUMBER`
+- `PUBLIC_SALES_EMAIL`
+- `CONVEX_URL`
+- `CONVEX_DEPLOYMENT`
+- `ADMIN_DASHBOARD_SECRET`
+
+## Local development
+
+```bash
+pnpm install
+pnpm convex:dev
+pnpm dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Run `pnpm build` to validate the Astro app.
 
-## 🚀 Project Structure
+## Future work
 
-Inside of your Astro project, you'll see the following folders and files:
+Razorpay is intentionally deferred. The intended future payment flow is:
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+- create a Razorpay order server-side from the validated cart
+- launch Razorpay checkout from the frontend
+- verify Razorpay webhooks server-side
+- sync payment and refund status back into Convex
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Until then, the site remains enquiry-only.

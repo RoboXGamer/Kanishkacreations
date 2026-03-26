@@ -1,0 +1,36 @@
+{
+  "title": "Hair Clip Butterfly Strip",
+  "legacyId": "asset-003",
+  "category": "hair-accessories",
+  "priceInr": 599,
+  "originalPriceInr": 719,
+  "image": "hair_clip_butterfly_strip.jpeg",
+  "badge": "NEW",
+  "isBestSeller": false,
+  "description": "Catalog item generated from local image asset hair_clip_butterfly_strip.jpeg. Update this copy with final merchandising details.",
+  "details": [
+    {
+      "label": "Material",
+      "value": "Durable Fashion Accessory Grade"
+    },
+    {
+      "label": "Use Case",
+      "value": "Daily Styling & Gifting"
+    }
+  ],
+  "specifications": [
+    {
+      "label": "Pack Type",
+      "value": "Catalog Display Variant"
+    },
+    {
+      "label": "Reference",
+      "value": "hair_clip_butterfly_strip"
+    }
+  ],
+  "careInstructions": [
+    "Store in a clean, dry place.",
+    "Avoid prolonged direct sunlight exposure.",
+    "Handle gently during transport and display."
+  ]
+}

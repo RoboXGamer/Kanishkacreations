@@ -1,0 +1,147 @@
+---
+export const prerender = false;
+
+import Layout from "../../layouts/Layout.astro";
+import { buildEnquiryLinks } from "../../lib/checkout/messages";
+import { convexQuery, isConvexConfigured } from "../../lib/convex/server";
+import { formatInr } from "../../lib/catalog";
+
+const orderId = Astro.url.searchParams.get("order");
+let order: any = null;
+let error = "";
+let links = { whatsappUrl: "#", emailUrl: "#" };
+
+if (!orderId) {
+    error = "Missing order reference.";
+} else if (!isConvexConfigured()) {
+    error = "Convex is not configured.";
+} else {
+    try {
+        order = await convexQuery<any>("orders:getOrderById", { orderId });
+        if (!order) {
+            error = "Order not found.";
+        } else {
+            const items = (order.items || []).map((item: any) => ({
+                productSlug: item.productSlug,
+                productLegacyId: item.productLegacyId,
+                productTitle: item.productTitleSnapshot,
+                productImage: item.productImageSnapshot,
+                unitPriceInr: item.unitPriceInr,
+                unitPriceFormatted: formatInr(item.unitPriceInr),
+                quantity: item.quantity,
+                lineTotalInr: item.lineTotalInr,
+                lineTotalFormatted: formatInr(item.lineTotalInr),
+                productCategory: item.productCategorySnapshot,
+                href: `/products/${item.productSlug}`,
+            }));
+            links = buildEnquiryLinks({
+                orderNumber: order.orderNumber,
+                customerName: order.customer?.fullName || "Customer",
+                phone: order.customer?.phone || undefined,
+                address: order.address,
+                notes: order.notesFromCustomer || "",
+                items,
+                subtotalInr: order.subtotalInr,
+                totalInr: order.totalInr,
+            });
+            order.items = items;
+        }
+    } catch (cause) {
+        error = cause instanceof Error ? cause.message : "Unable to load order.";
+    }
+}
+---
+
+<Layout title="Enquiry Created | Kanishka Creations">
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {
+            error ? (
+                <section class="rounded-3xl border border-red-200 bg-red-50 p-8">
+                    <h1 class="text-3xl font-bold mb-3">Unable to load your enquiry</h1>
+                    <p class="text-slate-600">{error}</p>
+                    <a href="/cart" class="inline-flex mt-6 text-primary font-bold hover:underline">
+                        Return to cart
+                    </a>
+                </section>
+            ) : (
+                <section class="space-y-8">
+                    <div class="max-w-3xl">
+                        <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">
+                            Enquiry Created
+                        </span>
+                        <h1 class="text-4xl md:text-6xl font-black tracking-tight mb-4">
+                            Your order reference is {order.orderNumber}.
+                        </h1>
+                        <p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed">
+                            Send the ready message below through WhatsApp or email so the team can confirm customization, timing, and dispatch details.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-10 items-start">
+                        <section class="rounded-3xl border border-slate-200 dark:border-white/10 p-8 bg-white/70 dark:bg-white/5">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                                <div>
+                                    <h2 class="font-bold mb-3">Customer</h2>
+                                    <p>{order.customer?.fullName}</p>
+                                </div>
+                                <div>
+                                    <h2 class="font-bold mb-3">Shipping address</h2>
+                                    <p class="text-slate-500 dark:text-slate-400">
+                                        {order.address?.line1}<br />
+                                        {order.address?.line2 && <>{order.address.line2}<br /></>}
+                                        {order.address?.landmark && <>{order.address.landmark}<br /></>}
+                                        {order.address?.city}, {order.address?.state} {order.address?.postalCode}<br />
+                                        {order.address?.country}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                {
+                                    order.items.map((item: any) => (
+                                        <div class="flex items-start gap-4 border-b border-slate-100 dark:border-white/10 pb-4">
+                                            <img src={item.productImage} alt={item.productTitle} class="w-20 h-20 rounded-2xl object-cover" />
+                                            <div class="flex-1">
+                                                <h3 class="font-bold">{item.productTitle}</h3>
+                                                <p class="text-sm text-slate-500">
+                                                    {item.quantity} x {item.unitPriceFormatted}
+                                                </p>
+                                            </div>
+                                            <span class="font-bold">{item.lineTotalFormatted}</span>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+
+                            <div class="pt-6 flex items-center justify-between text-lg font-bold">
+                                <span>Total</span>
+                                <span>{formatInr(order.totalInr)}</span>
+                            </div>
+                        </section>
+
+                        <aside class="rounded-3xl border border-slate-200 dark:border-white/10 p-8 bg-white/70 dark:bg-white/5">
+                            <h2 class="text-xl font-bold mb-4">Send enquiry</h2>
+                            <div class="space-y-3">
+                                <a href={links.whatsappUrl} target="_blank" class="w-full inline-flex justify-center bg-[#25D366] text-white font-bold py-3 rounded-xl">
+                                    WhatsApp Sales
+                                </a>
+                                <a href={links.emailUrl} class="w-full inline-flex justify-center bg-primary text-background-dark font-bold py-3 rounded-xl">
+                                    Email Sales
+                                </a>
+                            </div>
+                            <a href="/search" class="inline-flex mt-6 text-primary font-bold hover:underline">
+                                Continue shopping
+                            </a>
+                        </aside>
+                    </div>
+                </section>
+            )
+        }
+    </main>
+</Layout>
+
+<script>
+    import { clearCart } from "../../lib/checkout/cart";
+
+    clearCart();
+</script>

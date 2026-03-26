@@ -1,0 +1,218 @@
+---
+export const prerender = false;
+
+import Layout from "../../../layouts/Layout.astro";
+import { ADMIN_COOKIE_NAME, isAdminCookieValid } from "../../../lib/admin/auth";
+import { convexQuery, isConvexConfigured } from "../../../lib/convex/server";
+import { formatInr } from "../../../lib/catalog";
+import {
+    getFulfillmentStatusLabel,
+    getFulfillmentStatusTone,
+    getOrderStatusLabel,
+    getOrderStatusTone,
+    getRefundStatusLabel,
+    getRefundStatusTone,
+} from "../../../lib/admin/orders";
+
+if (!isAdminCookieValid(Astro.cookies.get(ADMIN_COOKIE_NAME)?.value)) {
+    return Astro.redirect("/admin/login?next=/admin/orders");
+}
+
+const search = Astro.url.searchParams.get("search") || "";
+const status = Astro.url.searchParams.get("status") || "";
+const from = Astro.url.searchParams.get("from") || "";
+const to = Astro.url.searchParams.get("to") || "";
+const includeArchived = Astro.url.searchParams.get("archived") === "1";
+
+let orders: any[] = [];
+let error = "";
+if (!isConvexConfigured()) {
+    error = "Convex is not configured.";
+} else {
+    try {
+        orders = await convexQuery<any[]>("admin:listOrders", {
+            search: search || undefined,
+            status: status || undefined,
+            from: from || undefined,
+            to: to || undefined,
+            includeArchived,
+        });
+    } catch (cause) {
+        error = cause instanceof Error ? cause.message : "Unable to load orders.";
+    }
+}
+
+const activeOrders = orders.filter((order) => !order.archivedAt);
+const archivedOrders = orders.filter((order) => order.archivedAt);
+const submittedOrders = orders.filter((order) => order.orderStatus === "submitted");
+const confirmedOrders = orders.filter((order) => order.orderStatus === "confirmed");
+const completedOrders = orders.filter((order) => order.orderStatus === "completed");
+---
+
+<Layout title="Admin Orders | Kanishka Creations">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
+            <div class="max-w-3xl">
+                <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">
+                    Admin
+                </span>
+                <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-3">Order dashboard</h1>
+                <p class="text-slate-500 dark:text-slate-400 text-lg">
+                    Create enquiry orders, update fulfilment, and track archive state from one place.
+                </p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <a href="/admin/orders/create" class="rounded-xl bg-primary px-5 py-3 font-bold text-background-dark shadow-lg shadow-primary/20 transition hover:-translate-y-0.5">
+                    New order
+                </a>
+                <form action="/api/admin/logout" method="POST">
+                    <button class="rounded-xl border border-slate-300 px-4 py-3 font-bold hover:border-primary hover:text-primary">
+                        Log out
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-5">
+                <p class="text-sm text-slate-500 mb-2">Loaded orders</p>
+                <p class="text-3xl font-black">{orders.length}</p>
+            </div>
+            <div class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-5">
+                <p class="text-sm text-slate-500 mb-2">Open orders</p>
+                <p class="text-3xl font-black">{submittedOrders.length}</p>
+            </div>
+            <div class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-5">
+                <p class="text-sm text-slate-500 mb-2">Confirmed</p>
+                <p class="text-3xl font-black">{confirmedOrders.length}</p>
+            </div>
+            <div class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-5">
+                <p class="text-sm text-slate-500 mb-2">Archived</p>
+                <p class="text-3xl font-black">{archivedOrders.length}</p>
+            </div>
+        </section>
+
+        <form class="grid grid-cols-1 lg:grid-cols-5 gap-4 mb-4 items-end rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-4 md:p-5">
+            <div class="lg:col-span-2">
+                <label class="block text-sm font-bold mb-2" for="search">Search</label>
+                <input id="search" name="search" value={search} placeholder="Search order number or customer" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" />
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-2" for="status">Status</label>
+                <select id="status" name="status" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white">
+                <option value="">All statuses</option>
+                <option value="submitted" selected={status === "submitted"}>Submitted</option>
+                <option value="awaiting_confirmation" selected={status === "awaiting_confirmation"}>Awaiting confirmation</option>
+                <option value="confirmed" selected={status === "confirmed"}>Confirmed</option>
+                <option value="cancel_requested" selected={status === "cancel_requested"}>Cancel requested</option>
+                <option value="cancelled" selected={status === "cancelled"}>Cancelled</option>
+                <option value="completed" selected={status === "completed"}>Completed</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-2" for="from">From</label>
+                <input id="from" type="date" name="from" value={from} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" />
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-2" for="to">To</label>
+                <input id="to" type="date" name="to" value={to} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" />
+            </div>
+            <div class="flex items-center justify-between gap-3 lg:col-span-5">
+                <label class="inline-flex items-center gap-3 text-sm font-semibold text-slate-600 dark:text-slate-300">
+                    <input type="checkbox" name="archived" value="1" checked={includeArchived} class="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary" />
+                    Include archived
+                </label>
+                <button class="rounded-xl bg-primary px-5 py-3 font-bold text-background-dark shadow-lg shadow-primary/20 transition hover:-translate-y-0.5">
+                    Filter
+                </button>
+            </div>
+        </form>
+
+        {
+            error ? (
+                <section class="rounded-3xl border border-red-200 bg-red-50 p-8 text-red-700">
+                    {error}
+                </section>
+            ) : (
+                <section class="overflow-hidden rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5">
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-max text-left">
+                            <thead class="bg-slate-50 dark:bg-white/5 text-xs uppercase tracking-[0.2em] text-slate-500">
+                                <tr>
+                                    <th class="px-6 py-4">Order</th>
+                                    <th class="px-6 py-4">Customer</th>
+                                    <th class="px-6 py-4">Created</th>
+                                    <th class="px-6 py-4">Total</th>
+                                    <th class="px-6 py-4">Order status</th>
+                                    <th class="px-6 py-4">Fulfillment</th>
+                                    <th class="px-6 py-4">Refund</th>
+                                    <th class="px-6 py-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    orders.length === 0 ? (
+                                        <tr>
+                                            <td colspan="8" class="px-6 py-10 text-center text-slate-500">
+                                                No orders found.
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        orders.map((order) => (
+                                            <tr class={`border-t border-slate-200 dark:border-white/10 ${order.archivedAt ? "opacity-70 bg-slate-50/60 dark:bg-white/5" : ""}`}>
+                                                <td class="px-6 py-5">
+                                                    <a href={`/admin/orders/${order._id}`} class="font-bold text-primary hover:underline">
+                                                        {order.orderNumber}
+                                                    </a>
+                                                    {order.archivedAt && (
+                                                        <span class="ml-3 inline-flex rounded-full bg-slate-200 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-700 dark:bg-white/10 dark:text-slate-200">
+                                                            Archived
+                                                        </span>
+                                                    )}
+                                                </td>
+                                                <td class="px-6 py-5">
+                                                    <div class="font-semibold">{order.customerName}</div>
+                                                    <div class="text-sm text-slate-500">{order.customer?.phone || "No phone"}</div>
+                                                </td>
+                                                <td class="px-6 py-5">{new Date(order.createdAt).toLocaleString("en-IN")}</td>
+                                                <td class="px-6 py-5">{formatInr(order.totalInr)}</td>
+                                                <td class="px-6 py-5">
+                                                    <span class={`inline-flex rounded-full px-3 py-1 text-xs font-bold capitalize ${getOrderStatusTone(order.orderStatus)}`}>
+                                                        {getOrderStatusLabel(order.orderStatus)}
+                                                    </span>
+                                                </td>
+                                                <td class="px-6 py-5">
+                                                    <span class={`inline-flex rounded-full px-3 py-1 text-xs font-bold capitalize ${getFulfillmentStatusTone(order.fulfillmentStatus)}`}>
+                                                        {getFulfillmentStatusLabel(order.fulfillmentStatus)}
+                                                    </span>
+                                                </td>
+                                                <td class="px-6 py-5">
+                                                    <span class={`inline-flex rounded-full px-3 py-1 text-xs font-bold capitalize ${getRefundStatusTone(order.refundStatus)}`}>
+                                                        {getRefundStatusLabel(order.refundStatus)}
+                                                    </span>
+                                                </td>
+                                                <td class="px-6 py-5">
+                                                    <div class="flex flex-wrap gap-2">
+                                                        <a href={`/admin/orders/${order._id}`} class="rounded-xl border border-slate-300 px-3 py-2 text-sm font-bold hover:border-primary hover:text-primary">
+                                                            View
+                                                        </a>
+                                                        <form action={`/api/admin/orders/${order._id}/archive`} method="POST">
+                                                            <input type="hidden" name="action" value={order.archivedAt ? "restore" : "archive"} />
+                                                            <button class="rounded-xl border border-slate-300 px-3 py-2 text-sm font-bold hover:border-primary hover:text-primary">
+                                                                {order.archivedAt ? "Restore" : "Archive"}
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            )
+        }
+    </main>
+</Layout>

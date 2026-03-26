@@ -1,0 +1,105 @@
+---
+export const prerender = false;
+
+import Layout from "../../../layouts/Layout.astro";
+import { ADMIN_COOKIE_NAME, isAdminCookieValid } from "../../../lib/admin/auth";
+import { convexQuery, isConvexConfigured } from "../../../lib/convex/server";
+import { formatInr } from "../../../lib/catalog";
+
+if (!isAdminCookieValid(Astro.cookies.get(ADMIN_COOKIE_NAME)?.value)) {
+  return Astro.redirect("/admin/login?next=/admin/products");
+}
+
+const search = (Astro.url.searchParams.get("search") || "").trim().toLowerCase();
+
+let products: Array<any> = [];
+let error = "";
+
+if (!isConvexConfigured()) {
+  error = "Convex is not configured.";
+} else {
+  try {
+    products = await convexQuery<Array<any>>("catalogAdmin:listProducts", {});
+  } catch (cause) {
+    error = cause instanceof Error ? cause.message : "Unable to load products.";
+  }
+}
+
+const filteredProducts = products.filter((product) => {
+  if (!search) return true;
+  return [product.title, product.slug, product.legacyId, product.categoryTitle]
+    .join(" ")
+    .toLowerCase()
+    .includes(search);
+});
+---
+
+<Layout title="Admin Products | Kanishka Creations">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
+      <div class="max-w-3xl">
+        <a href="/admin" class="inline-flex text-sm font-bold text-primary hover:underline mb-4">Back to dashboard</a>
+        <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">Admin</span>
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-3">Products</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-lg">Manage the storefront catalog from Convex.</p>
+      </div>
+      <a href="/admin/products/create" class="rounded-xl bg-primary px-5 py-3 font-bold text-background-dark shadow-lg shadow-primary/20 transition hover:-translate-y-0.5">
+        New product
+      </a>
+    </div>
+
+    <form class="mb-6 rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-4 md:p-5">
+      <label class="block text-sm font-bold mb-2" for="search">Search</label>
+      <div class="flex flex-col md:flex-row gap-3">
+        <input id="search" name="search" value={search} placeholder="Search title, slug, legacy ID, or category" class="flex-1 rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" />
+        <button class="rounded-xl bg-primary px-5 py-3 font-bold text-background-dark">Filter</button>
+      </div>
+    </form>
+
+    {
+      error ? (
+        <section class="rounded-3xl border border-red-200 bg-red-50 p-8 text-red-700">{error}</section>
+      ) : (
+        <section class="overflow-hidden rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5">
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-max text-left">
+              <thead class="bg-slate-50 dark:bg-white/5 text-xs uppercase tracking-[0.2em] text-slate-500">
+                <tr>
+                  <th class="px-6 py-4">Product</th>
+                  <th class="px-6 py-4">Category</th>
+                  <th class="px-6 py-4">Price</th>
+                  <th class="px-6 py-4">Best seller</th>
+                  <th class="px-6 py-4">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  filteredProducts.length === 0 ? (
+                    <tr>
+                      <td colspan="5" class="px-6 py-10 text-center text-slate-500">No products found.</td>
+                    </tr>
+                  ) : (
+                    filteredProducts.map((product) => (
+                      <tr class="border-t border-slate-200 dark:border-white/10">
+                        <td class="px-6 py-5">
+                          <a href={`/admin/products/${product.slug}`} class="font-bold text-primary hover:underline">{product.title}</a>
+                          <div class="text-sm text-slate-500">{product.slug} · {product.legacyId}</div>
+                        </td>
+                        <td class="px-6 py-5">{product.categoryTitle}</td>
+                        <td class="px-6 py-5">{formatInr(product.priceInr)}</td>
+                        <td class="px-6 py-5">{product.isBestSeller ? "Yes" : "No"}</td>
+                        <td class="px-6 py-5">
+                          <a href={`/admin/products/${product.slug}`} class="rounded-xl border border-slate-300 px-3 py-2 text-sm font-bold hover:border-primary hover:text-primary">Edit</a>
+                        </td>
+                      </tr>
+                    ))
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )
+    }
+  </main>
+</Layout>

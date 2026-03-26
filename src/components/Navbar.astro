@@ -1,15 +1,14 @@
 ---
-import categories from "../data/categories.json";
+import { getCategories } from "../lib/catalog";
 
-const navItems = categories;
+const navItems = await getCategories();
 ---
 
 <header
-    class="sticky top-0 z-50 w-full border-b border-white/10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md"
+    class="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-950/80 dark:bg-background-dark/80 backdrop-blur-md"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
-            <!-- Logo & Brand -->
             <a href="/" class="flex items-center gap-2">
                 <span class="material-symbols-outlined text-primary text-3xl"
                     >diamond</span
@@ -20,7 +19,6 @@ const navItems = categories;
                     Kanishka <span class="text-primary">Creations</span>
                 </h1>
             </a>
-            <!-- Desktop Nav -->
             <nav class="hidden md:flex items-center gap-8">
                 {
                     navItems.map((item) => (
@@ -28,12 +26,11 @@ const navItems = categories;
                             class="text-sm font-medium hover:text-primary transition-colors"
                             href={`/search?category=${item.id}`}
                         >
-                            {item.title}
+                            {item.data.title}
                         </a>
                     ))
                 }
             </nav>
-            <!-- Action Icons -->
             <div class="flex items-center gap-4">
                 <div class="relative hidden sm:block">
                     <span
@@ -42,7 +39,7 @@ const navItems = categories;
                     >
                     <input
                         id="global-search"
-                        class="bg-slate-100 dark:bg-white/5 border-none rounded-full pl-10 pr-4 py-1.5 text-sm focus:ring-1 focus:ring-primary w-48 transition-all focus:w-64"
+                        class="bg-slate-900/60 dark:bg-white/5 border-none rounded-full pl-10 pr-4 py-1.5 text-sm focus:ring-1 focus:ring-primary w-48 transition-all focus:w-64 text-white placeholder:text-slate-400"
                         placeholder="Search..."
                         type="text"
                     />
@@ -53,8 +50,9 @@ const navItems = categories;
                 >
                     <span class="material-symbols-outlined">shopping_bag</span>
                     <span
+                        id="cart-count"
                         class="absolute top-1 right-1 bg-primary text-background-dark text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full"
-                        >3</span
+                        >0</span
                     >
                 </a>
             </div>
@@ -63,6 +61,8 @@ const navItems = categories;
 </header>
 
 <script>
+    import { getCartCount, readCart } from "../lib/checkout/cart";
+
     const searchInput = document.getElementById(
         "global-search",
     ) as HTMLInputElement;
@@ -72,5 +72,11 @@ const navItems = categories;
                 window.location.href = `/search?q=${encodeURIComponent(searchInput.value.trim())}`;
             }
         });
+    }
+
+    const cartCount = document.getElementById("cart-count");
+    const cart = readCart();
+    if (cartCount) {
+        cartCount.textContent = String(getCartCount(cart.items));
     }
 </script>

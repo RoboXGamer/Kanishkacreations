@@ -1,9 +1,10 @@
 ---
-import categories from "../data/categories.json";
+import { getCategories } from "../lib/catalog";
+
+const categories = await getCategories();
 ---
 
 <aside class="w-full lg:w-72 shrink-0 space-y-10">
-    <!-- Categories -->
     <section>
         <h3
             class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-6"
@@ -35,9 +36,11 @@ import categories from "../data/categories.json";
                     >
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-slate-400 group-[.active]:text-primary transition-colors">
-                                {cat.icon}
+                                {cat.data.icon}
                             </span>
-                            <span class="text-sm font-medium">{cat.title}</span>
+                            <span class="text-sm font-medium">
+                                {cat.data.title}
+                            </span>
                         </div>
                         <span class="material-symbols-outlined text-sm opacity-0 group-[.active]:opacity-100 text-primary">
                             check
@@ -48,7 +51,6 @@ import categories from "../data/categories.json";
         </div>
     </section>
 
-    <!-- Price Range -->
     <section>
         <div class="flex items-center justify-between mb-6">
             <h3
@@ -59,7 +61,7 @@ import categories from "../data/categories.json";
             <span
                 id="price-display"
                 class="text-xs font-bold text-primary px-2 py-1 bg-primary/10 rounded"
-                >₹10,000+</span
+                >Rs.10,000+</span
             >
         </div>
         <div class="px-2">
@@ -75,8 +77,8 @@ import categories from "../data/categories.json";
             <div
                 class="flex justify-between mt-3 text-[10px] font-bold text-slate-400 uppercase tracking-tighter"
             >
-                <span>₹0</span>
-                <span>₹10,000+</span>
+                <span>Rs.0</span>
+                <span>Rs.10,000+</span>
             </div>
         </div>
     </section>

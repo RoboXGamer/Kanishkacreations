@@ -2,34 +2,135 @@
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Shopping Bag | Kanishka Creations">
-    <main
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 flex flex-col items-center justify-center min-h-[60vh] text-center"
-    >
-        <div
-            class="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-8"
-        >
-            <span class="material-symbols-outlined text-primary text-5xl"
-                >shopping_cart_checkout</span
-            >
+<Layout title="Cart | Kanishka Creations">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="max-w-3xl mb-10">
+            <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">
+                Cart
+            </span>
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight mb-4">
+                Review the shortlist before sending your enquiry.
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed">
+                Quantities and totals are validated against the current catalog before checkout.
+            </p>
         </div>
-        <h1
-            class="text-4xl md:text-6xl font-black text-slate-900 dark:text-white mb-6 tracking-tight"
-        >
-            Something <span class="text-primary italic">Elegant</span> is Coming
-        </h1>
-        <p
-            class="text-slate-500 dark:text-slate-400 text-lg md:text-xl max-w-2xl mb-12 leading-relaxed"
-        >
-            We're currently refining our seamless checkout experience. Soon
-            you'll be able to reserve your favorite handcrafted pieces directly.
-        </p>
-        <a
-            href="/search"
-            class="bg-primary hover:bg-primary/90 text-background-dark font-bold px-10 py-4 rounded-xl transition-all shadow-xl shadow-primary/20 flex items-center gap-3"
-        >
-            <span>Continue Exploring</span>
-            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-        </a>
+
+        <div class="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-10 items-start">
+            <section class="space-y-6">
+                <div id="empty-state" class="hidden rounded-3xl border border-dashed border-slate-300 p-12 text-center">
+                    <span class="material-symbols-outlined text-6xl text-slate-300">shopping_bag</span>
+                    <h2 class="text-2xl font-bold mt-4 mb-2">Your cart is empty</h2>
+                    <p class="text-slate-500 dark:text-slate-400">
+                        Browse the collection and add products to continue.
+                    </p>
+                    <a href="/search" class="inline-flex mt-6 bg-primary hover:bg-primary/90 text-background-dark font-bold px-6 py-3 rounded-xl">
+                        Continue Exploring
+                    </a>
+                </div>
+                <div id="cart-lines" class="space-y-4"></div>
+            </section>
+
+            <aside class="rounded-3xl border border-slate-200 dark:border-white/10 p-8 bg-white/60 dark:bg-white/5 backdrop-blur">
+                <h2 class="text-xl font-bold mb-4">Summary</h2>
+                <div id="cart-summary" class="space-y-3 mb-6">
+                    <p class="text-slate-500 dark:text-slate-400">Loading cart...</p>
+                </div>
+                <a id="checkout-cta" href="/checkout" class="hidden w-full inline-flex justify-center bg-primary text-background-dark font-bold py-3 rounded-xl">
+                    Proceed to checkout
+                </a>
+            </aside>
+        </div>
     </main>
 </Layout>
+
+<script>
+    import { readCart, removeFromCart, updateCartItem } from "../lib/checkout/cart";
+
+    const lines = document.getElementById("cart-lines");
+    const summary = document.getElementById("cart-summary");
+    const emptyState = document.getElementById("empty-state");
+    const checkoutCta = document.getElementById("checkout-cta");
+
+    async function renderCart() {
+        const cart = readCart();
+        const response = await fetch("/api/cart/validate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ items: cart.items }),
+        });
+        const payload = await response.json();
+
+        if (!payload.ok || !payload.items?.length) {
+            lines.innerHTML = "";
+            summary.innerHTML = `<p class="text-slate-500 dark:text-slate-400">Your cart is empty.</p>`;
+            emptyState?.classList.remove("hidden");
+            checkoutCta?.classList.add("hidden");
+            return;
+        }
+
+        emptyState?.classList.add("hidden");
+        checkoutCta?.classList.remove("hidden");
+
+        lines.innerHTML = payload.items.map((item) => `
+            <article class="flex flex-col sm:flex-row gap-5 rounded-3xl border border-slate-200 dark:border-white/10 p-5 bg-white/70 dark:bg-white/5">
+                <img src="${item.productImage}" alt="${item.productTitle}" class="w-full sm:w-40 aspect-square object-cover rounded-2xl" />
+                <div class="flex-1">
+                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                        <div>
+                            <h3 class="text-xl font-bold">${item.productTitle}</h3>
+                            <p class="text-sm text-slate-500">${item.productCategory}</p>
+                            <p class="text-primary font-bold mt-2">${item.lineTotalFormatted}</p>
+                        </div>
+                        <button class="remove-item text-sm font-bold text-slate-500 hover:text-primary" data-product="${item.productSlug}">
+                            Remove
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-3 mt-4">
+                        <button class="qty-btn rounded-full border border-slate-300 w-10 h-10 font-bold" data-product="${item.productSlug}" data-direction="-1">-</button>
+                        <span class="font-bold min-w-8 text-center">${item.quantity}</span>
+                        <button class="qty-btn rounded-full border border-slate-300 w-10 h-10 font-bold" data-product="${item.productSlug}" data-direction="1">+</button>
+                        <a href="${item.href}" class="ml-auto text-sm font-bold text-primary hover:underline">
+                            View product
+                        </a>
+                    </div>
+                </div>
+            </article>
+        `).join("");
+
+        summary.innerHTML = `
+            <div class="flex items-center justify-between">
+                <span class="text-slate-500">Items</span>
+                <span class="font-bold">${payload.items.reduce((sum, item) => sum + Number(item.quantity || 0), 0)}</span>
+            </div>
+            <div class="flex items-center justify-between">
+                <span class="text-slate-500">Subtotal</span>
+                <span class="font-bold">${payload.totalFormatted}</span>
+            </div>
+            <div class="flex items-center justify-between">
+                <span class="text-slate-500">Total</span>
+                <span class="font-bold">${payload.totalFormatted}</span>
+            </div>
+        `;
+
+        document.querySelectorAll(".remove-item").forEach((button) => {
+            button.addEventListener("click", () => {
+                removeFromCart(button.getAttribute("data-product") || "");
+                renderCart();
+            });
+        });
+
+        document.querySelectorAll(".qty-btn").forEach((button) => {
+            button.addEventListener("click", () => {
+                const productSlug = button.getAttribute("data-product") || "";
+                const direction = Number(button.getAttribute("data-direction") || 0);
+                const current = cart.items.find((item) => item.productSlug === productSlug);
+                if (!current) return;
+                updateCartItem(productSlug, current.quantity + direction);
+                renderCart();
+            });
+        });
+    }
+
+    renderCart();
+</script>

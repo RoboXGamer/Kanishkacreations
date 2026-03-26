@@ -1,0 +1,88 @@
+---
+export const prerender = false;
+
+import Layout from "../../../layouts/Layout.astro";
+import { ADMIN_COOKIE_NAME, isAdminCookieValid } from "../../../lib/admin/auth";
+import { convexQuery, isConvexConfigured } from "../../../lib/convex/server";
+import { formatLines } from "../../../lib/admin/catalog";
+
+if (!isAdminCookieValid(Astro.cookies.get(ADMIN_COOKIE_NAME)?.value)) {
+  return Astro.redirect(`/admin/login?next=/admin/categories/${Astro.params.slug}`);
+}
+
+let category: any = null;
+let error = "";
+
+if (!isConvexConfigured()) {
+  error = "Convex is not configured.";
+} else {
+  try {
+    category = await convexQuery<any>("catalogAdmin:getCategory", { slug: Astro.params.slug });
+    if (!category) {
+      error = "Category not found.";
+    }
+  } catch (cause) {
+    error = cause instanceof Error ? cause.message : "Unable to load category.";
+  }
+}
+---
+
+<Layout title={category ? `${category.title} | Admin Categories` : "Admin Category | Kanishka Creations"}>
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+      <div>
+        <a href="/admin/categories" class="inline-flex text-sm font-bold text-primary hover:underline mb-4">Back to categories</a>
+        <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">Admin</span>
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-3">{category?.title || "Edit category"}</h1>
+      </div>
+      {category && (
+        <form action={`/api/admin/categories/${category.slug}`} method="POST" onsubmit="return confirm('Delete this category? This will fail if products are still assigned to it.')">
+          <input type="hidden" name="action" value="delete" />
+          <button class="rounded-xl border border-rose-300 px-4 py-3 font-bold text-rose-700 hover:border-rose-400 hover:text-rose-800 dark:border-rose-500/30 dark:text-rose-200">Delete category</button>
+        </form>
+      )}
+    </div>
+
+    {
+      error ? (
+        <section class="rounded-3xl border border-red-200 bg-red-50 p-8 text-red-700">{error}</section>
+      ) : (
+        <form action={`/api/admin/categories/${category.slug}`} method="POST" class="space-y-6">
+          <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+            <h2 class="text-xl font-bold mb-6">Category details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-bold mb-2" for="slug">Slug</label>
+                <input id="slug" name="slug" value={category.slug} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="title">Title</label>
+                <input id="title" name="title" value={category.title} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="icon">Icon</label>
+                <input id="icon" name="icon" value={category.icon} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="sortOrder">Sort order</label>
+                <input id="sortOrder" name="sortOrder" type="number" min="0" step="1" value={category.sortOrder} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="image">Image URL</label>
+                <input id="image" name="image" value={category.image} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="buttonLabel">Button label</label>
+                <input id="buttonLabel" name="buttonLabel" value={category.buttonLabel} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+            </div>
+            <label class="block text-sm font-bold mb-2 mt-4" for="summaryItems">Summary items</label>
+            <textarea id="summaryItems" name="summaryItems" rows="4" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white">{formatLines(category.summaryItems || [])}</textarea>
+          </section>
+
+          <button class="rounded-2xl bg-primary px-6 py-4 text-lg font-bold text-background-dark shadow-xl shadow-primary/20 transition hover:-translate-y-0.5">Save changes</button>
+        </form>
+      )
+    }
+  </main>
+</Layout>

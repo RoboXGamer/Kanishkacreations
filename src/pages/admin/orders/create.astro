@@ -1,0 +1,373 @@
+---
+export const prerender = false;
+
+import Layout from "../../../layouts/Layout.astro";
+import { ADMIN_COOKIE_NAME, isAdminCookieValid } from "../../../lib/admin/auth";
+import { formatInr, getProducts, resolveProductImage } from "../../../lib/catalog";
+import { getOrderStatusLabel } from "../../../lib/admin/orders";
+
+if (!isAdminCookieValid(Astro.cookies.get(ADMIN_COOKIE_NAME)?.value)) {
+    return Astro.redirect("/admin/login?next=/admin/orders/create");
+}
+
+const products = (await getProducts()).map((product) => ({
+    slug: product.id,
+    title: product.data.title,
+    legacyId: product.data.legacyId,
+    category: product.data.category,
+    priceInr: product.data.priceInr,
+    image: resolveProductImage(product.data.image),
+    badge: product.data.badge,
+}));
+
+const statusOptions = [
+    "submitted",
+    "awaiting_confirmation",
+    "confirmed",
+    "cancel_requested",
+    "cancelled",
+    "completed",
+];
+---
+
+<Layout title="Create Admin Order | Kanishka Creations">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
+            <div class="max-w-3xl">
+                <a href="/admin/orders" class="inline-flex text-sm font-bold text-primary hover:underline mb-4">
+                    Back to orders
+                </a>
+                <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">
+                    Admin
+                </span>
+                <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-3">Create manual order</h1>
+                <p class="text-slate-500 dark:text-slate-400 text-lg">
+                    Build an enquiry order for a customer, pick products from the catalog, and send it into the same dashboard flow.
+                </p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 px-4 py-3 text-sm text-slate-500 dark:text-slate-400">
+                Orders start as enquiry records and can be archived later.
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-8 items-start">
+            <form id="create-order-form" action="/api/admin/orders/create" method="POST" class="space-y-8">
+                <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+                    <h2 class="text-xl font-bold mb-6">Customer details</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="customerName">Full name</label>
+                            <input id="customerName" name="customerName" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="phone">Phone</label>
+                            <input id="phone" name="phone" inputmode="tel" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                        </div>
+                    </div>
+                </section>
+
+                <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+                    <h2 class="text-xl font-bold mb-6">Shipping address</h2>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="line1">Address line 1</label>
+                            <input id="line1" name="line1" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="line2">Address line 2</label>
+                            <input id="line2" name="line2" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="landmark">Landmark</label>
+                            <input id="landmark" name="landmark" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold mb-2" for="city">City</label>
+                                <input id="city" name="city" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold mb-2" for="state">State</label>
+                                <input id="state" name="state" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold mb-2" for="postalCode">Postal code</label>
+                                <input id="postalCode" name="postalCode" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold mb-2" for="country">Country</label>
+                                <input id="country" name="country" value="India" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+                    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+                        <div>
+                            <h2 class="text-xl font-bold">Items</h2>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Search the catalog, add line items, and the dashboard will calculate the total.</p>
+                        </div>
+                        <div class="rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-600 dark:bg-white/10 dark:text-slate-300">
+                            Duplicate products merge into a single row.
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-[1fr_120px_auto] gap-3 mb-6">
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="productPicker">Product</label>
+                            <select id="productPicker" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white">
+                                {products.map((product) => (
+                                    <option value={product.slug}>
+                                        {product.title} - {formatInr(product.priceInr)}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="quantityPicker">Qty</label>
+                            <input id="quantityPicker" type="number" min="1" value="1" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" />
+                        </div>
+                        <div class="flex items-end">
+                            <button id="addItemButton" type="button" class="w-full rounded-xl bg-primary px-5 py-3 font-bold text-background-dark shadow-lg shadow-primary/20 transition hover:-translate-y-0.5">
+                                Add item
+                            </button>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="itemsJson" name="itemsJson" value="[]" />
+                    <div id="itemsEmpty" class="rounded-2xl border border-dashed border-slate-300 px-4 py-8 text-center text-slate-500 dark:border-white/10 dark:text-slate-400">
+                        No items added yet.
+                    </div>
+                    <ul id="itemsList" class="space-y-3"></ul>
+                </section>
+
+                <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+                    <h2 class="text-xl font-bold mb-6">Order settings</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="orderStatus">Initial order status</label>
+                            <select id="orderStatus" name="orderStatus" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white">
+                                {statusOptions.map((value, index) => (
+                                    <option value={value} selected={index === 0}>
+                                        {getOrderStatusLabel(value)}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="internalAdminNotes">Internal note</label>
+                            <input id="internalAdminNotes" name="internalAdminNotes" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" placeholder="Optional admin-only note" />
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-sm font-bold mb-2" for="notes">Customer notes</label>
+                        <textarea id="notes" name="notes" rows="4" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" placeholder="Optional note from the customer"></textarea>
+                    </div>
+                </section>
+
+                <div class="rounded-3xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 hidden" id="formError" aria-live="polite"></div>
+
+                <button id="submitButton" class="w-full rounded-2xl bg-primary px-6 py-4 text-lg font-bold text-background-dark shadow-xl shadow-primary/20 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70">
+                    Create order
+                </button>
+            </form>
+
+            <aside class="space-y-6 xl:sticky xl:top-8">
+                <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+                    <h2 class="text-xl font-bold mb-4">Live summary</h2>
+                    <div class="space-y-3 text-sm text-slate-600 dark:text-slate-300">
+                        <div class="flex items-center justify-between gap-4">
+                            <span>Items</span>
+                            <strong id="summaryItemCount">0</strong>
+                        </div>
+                        <div class="flex items-center justify-between gap-4">
+                            <span>Subtotal</span>
+                            <strong id="summarySubtotal">{formatInr(0)}</strong>
+                        </div>
+                        <div class="flex items-center justify-between gap-4">
+                            <span>Status</span>
+                            <strong id="summaryStatus">Submitted</strong>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+                    <h2 class="text-xl font-bold mb-4">Catalog preview</h2>
+                    <div id="catalogPreview" class="space-y-3 max-h-112 overflow-auto pr-1"></div>
+                </section>
+            </aside>
+        </div>
+    </main>
+
+    <script type="module" define:vars={{ products }}>
+        const productPicker = document.getElementById("productPicker");
+        const quantityPicker = document.getElementById("quantityPicker");
+        const addItemButton = document.getElementById("addItemButton");
+        const itemsList = document.getElementById("itemsList");
+        const itemsEmpty = document.getElementById("itemsEmpty");
+        const itemsJson = document.getElementById("itemsJson");
+        const summaryItemCount = document.getElementById("summaryItemCount");
+        const summarySubtotal = document.getElementById("summarySubtotal");
+        const summaryStatus = document.getElementById("summaryStatus");
+        const form = document.getElementById("create-order-form");
+        const submitButton = document.getElementById("submitButton");
+        const formError = document.getElementById("formError");
+        const statusSelect = document.getElementById("orderStatus");
+        const catalogPreview = document.getElementById("catalogPreview");
+
+        const currencyFormatter = new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2,
+        });
+
+        const items = [];
+
+        function findProduct(slug) {
+            return products.find((product) => product.slug === slug);
+        }
+
+        function syncSummary() {
+            const subtotal = items.reduce((total, item) => {
+                const product = findProduct(item.slug);
+                return total + (product ? product.priceInr * item.quantity : 0);
+            }, 0);
+
+            itemsJson.value = JSON.stringify(
+                items.map((item) => ({ productSlug: item.slug, quantity: item.quantity })),
+            );
+            summaryItemCount.textContent = String(items.reduce((total, item) => total + item.quantity, 0));
+            summarySubtotal.textContent = currencyFormatter.format(subtotal);
+            summaryStatus.textContent = statusSelect.options[statusSelect.selectedIndex]?.textContent || "Submitted";
+            itemsEmpty.classList.toggle("hidden", items.length > 0);
+
+            itemsList.innerHTML = "";
+            items.forEach((item, index) => {
+                const product = findProduct(item.slug);
+                if (!product) {
+                    return;
+                }
+
+                const lineTotal = product.priceInr * item.quantity;
+                const li = document.createElement("li");
+                li.className = "rounded-2xl border border-slate-200 bg-white px-4 py-4 dark:border-white/10 dark:bg-white/5";
+                li.innerHTML = `
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div class="flex items-center gap-4 min-w-0">
+                            <img src="${product.image}" alt="${product.title}" class="h-16 w-16 rounded-xl object-cover" />
+                            <div class="min-w-0">
+                                <p class="font-bold truncate">${product.title}</p>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">${product.legacyId} · ${currencyFormatter.format(product.priceInr)} each</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 justify-between md:justify-end">
+                            <div class="text-right">
+                                <p class="text-sm text-slate-500 dark:text-slate-400">Qty ${item.quantity}</p>
+                                <p class="font-bold">${currencyFormatter.format(lineTotal)}</p>
+                            </div>
+                            <button type="button" data-remove-index="${index}" class="rounded-xl border border-slate-300 px-3 py-2 text-sm font-bold hover:border-primary hover:text-primary">
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                `;
+                itemsList.appendChild(li);
+            });
+
+            itemsList.querySelectorAll("[data-remove-index]").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const index = Number(button.getAttribute("data-remove-index"));
+                    items.splice(index, 1);
+                    syncSummary();
+                });
+            });
+        }
+
+        function showError(message) {
+            formError.textContent = message;
+            formError.classList.remove("hidden");
+        }
+
+        function clearError() {
+            formError.textContent = "";
+            formError.classList.add("hidden");
+        }
+
+        addItemButton.addEventListener("click", () => {
+            clearError();
+            const slug = productPicker.value;
+            const quantity = Math.max(1, Number(quantityPicker.value || 1));
+            const existing = items.find((item) => item.slug === slug);
+
+            if (existing) {
+                existing.quantity += quantity;
+            } else {
+                items.push({ slug, quantity });
+            }
+
+            quantityPicker.value = "1";
+            syncSummary();
+        });
+
+        statusSelect.addEventListener("change", syncSummary);
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            clearError();
+
+            if (items.length === 0) {
+                showError("Add at least one item before creating the order.");
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.textContent = "Creating order...";
+
+            try {
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: new FormData(form),
+                });
+
+                if (response.redirected) {
+                    window.location.assign(response.url);
+                    return;
+                }
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    showError(errorText || "Unable to create the order.");
+                    return;
+                }
+
+                window.location.assign(response.url);
+            } catch (error) {
+                showError(error instanceof Error ? error.message : "Unable to create the order.");
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = "Create order";
+            }
+        });
+
+        products.slice(0, 8).forEach((product) => {
+            const card = document.createElement("article");
+            card.className = "rounded-2xl border border-slate-200 bg-white/80 p-4 dark:border-white/10 dark:bg-white/5";
+            card.innerHTML = `
+                <div class="flex items-start gap-4">
+                    <img src="${product.image}" alt="${product.title}" class="h-14 w-14 rounded-xl object-cover" />
+                    <div class="min-w-0 flex-1">
+                        <p class="font-bold truncate">${product.title}</p>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">${product.category} · ${currencyFormatter.format(product.priceInr)}</p>
+                    </div>
+                </div>
+            `;
+            catalogPreview.appendChild(card);
+        });
+
+        syncSummary();
+    </script>
+</Layout>

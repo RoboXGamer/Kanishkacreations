@@ -1,0 +1,57 @@
+---
+export const prerender = false;
+
+import Layout from "../../../layouts/Layout.astro";
+import { ADMIN_COOKIE_NAME, isAdminCookieValid } from "../../../lib/admin/auth";
+
+if (!isAdminCookieValid(Astro.cookies.get(ADMIN_COOKIE_NAME)?.value)) {
+  return Astro.redirect("/admin/login?next=/admin/categories/create");
+}
+---
+
+<Layout title="Create Category | Kanishka Creations">
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="max-w-3xl mb-8">
+      <a href="/admin/categories" class="inline-flex text-sm font-bold text-primary hover:underline mb-4">Back to categories</a>
+      <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">Admin</span>
+      <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-3">Create category</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-lg">Add a new collection category.</p>
+    </div>
+
+    <form action="/api/admin/categories" method="POST" class="space-y-6">
+      <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+        <h2 class="text-xl font-bold mb-6">Category details</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-bold mb-2" for="slug">Slug</label>
+            <input id="slug" name="slug" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+          </div>
+          <div>
+            <label class="block text-sm font-bold mb-2" for="title">Title</label>
+            <input id="title" name="title" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+          </div>
+          <div>
+            <label class="block text-sm font-bold mb-2" for="icon">Icon</label>
+            <input id="icon" name="icon" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+          </div>
+          <div>
+            <label class="block text-sm font-bold mb-2" for="sortOrder">Sort order</label>
+            <input id="sortOrder" name="sortOrder" type="number" min="0" step="1" value="1" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+          </div>
+          <div>
+            <label class="block text-sm font-bold mb-2" for="image">Image URL</label>
+            <input id="image" name="image" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+          </div>
+          <div>
+            <label class="block text-sm font-bold mb-2" for="buttonLabel">Button label</label>
+            <input id="buttonLabel" name="buttonLabel" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+          </div>
+        </div>
+        <label class="block text-sm font-bold mb-2 mt-4" for="summaryItems">Summary items</label>
+        <textarea id="summaryItems" name="summaryItems" rows="4" placeholder="First item\nSecond item\nThird item" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400"></textarea>
+      </section>
+
+      <button class="w-full rounded-2xl bg-primary px-6 py-4 text-lg font-bold text-background-dark shadow-xl shadow-primary/20 transition hover:-translate-y-0.5">Create category</button>
+    </form>
+  </main>
+</Layout>

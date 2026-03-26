@@ -1,0 +1,108 @@
+---
+export const prerender = false;
+
+import Layout from "../../../layouts/Layout.astro";
+import { ADMIN_COOKIE_NAME, isAdminCookieValid } from "../../../lib/admin/auth";
+import { convexQuery, isConvexConfigured } from "../../../lib/convex/server";
+
+if (!isAdminCookieValid(Astro.cookies.get(ADMIN_COOKIE_NAME)?.value)) {
+  return Astro.redirect("/admin/login?next=/admin/products/create");
+}
+
+let categories: Array<any> = [];
+let error = "";
+
+if (!isConvexConfigured()) {
+  error = "Convex is not configured.";
+} else {
+  try {
+    categories = await convexQuery<Array<any>>("catalog:listCategories", {});
+  } catch (cause) {
+    error = cause instanceof Error ? cause.message : "Unable to load categories.";
+  }
+}
+---
+
+<Layout title="Create Product | Kanishka Creations">
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="max-w-3xl mb-8">
+      <a href="/admin/products" class="inline-flex text-sm font-bold text-primary hover:underline mb-4">Back to products</a>
+      <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">Admin</span>
+      <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-3">Create product</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-lg">Add a new product to the Convex catalog.</p>
+    </div>
+
+    {
+      error ? (
+        <section class="rounded-3xl border border-red-200 bg-red-50 p-8 text-red-700">{error}</section>
+      ) : (
+        <form action="/api/admin/products" method="POST" class="space-y-6">
+          <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+            <h2 class="text-xl font-bold mb-6">Core details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-bold mb-2" for="slug">Slug</label>
+                <input id="slug" name="slug" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="title">Title</label>
+                <input id="title" name="title" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="legacyId">Legacy ID</label>
+                <input id="legacyId" name="legacyId" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="categorySlug">Category</label>
+                <select id="categorySlug" name="categorySlug" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required>
+                  <option value="">Select a category</option>
+                  {categories.map((category) => <option value={category.slug}>{category.title}</option>)}
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="priceInr">Price (INR)</label>
+                <input id="priceInr" name="priceInr" type="number" min="0" step="1" value="0" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="originalPriceInr">Original price (INR)</label>
+                <input id="originalPriceInr" name="originalPriceInr" type="number" min="0" step="1" value="0" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="image">Image URL or asset filename</label>
+                <input id="image" name="image" placeholder="hair_clip_example.jpeg or https://..." class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="badge">Badge</label>
+                <input id="badge" name="badge" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" />
+              </div>
+            </div>
+            <label class="mt-4 inline-flex items-center gap-3 text-sm font-semibold text-slate-600 dark:text-slate-300">
+              <input type="checkbox" name="isBestSeller" class="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary" />
+              Show on homepage best sellers
+            </label>
+          </section>
+
+          <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+            <h2 class="text-xl font-bold mb-6">Description</h2>
+            <label class="block text-sm font-bold mb-2" for="description">Description</label>
+            <textarea id="description" name="description" rows="5" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" required></textarea>
+          </section>
+
+          <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+            <h2 class="text-xl font-bold mb-6">Highlights</h2>
+            <label class="block text-sm font-bold mb-2" for="details">Details</label>
+            <textarea id="details" name="details" rows="5" placeholder="Material: Cotton\nUse case: Daily wear" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400"></textarea>
+            <label class="block text-sm font-bold mb-2 mt-4" for="specifications">Specifications</label>
+            <textarea id="specifications" name="specifications" rows="5" placeholder="Weight: 160 GSM\nFit: Regular" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400"></textarea>
+            <label class="block text-sm font-bold mb-2 mt-4" for="careInstructions">Care instructions</label>
+            <textarea id="careInstructions" name="careInstructions" rows="4" placeholder="Hand wash only\nAvoid direct sunlight" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400"></textarea>
+          </section>
+
+          <button class="w-full rounded-2xl bg-primary px-6 py-4 text-lg font-bold text-background-dark shadow-xl shadow-primary/20 transition hover:-translate-y-0.5">
+            Create product
+          </button>
+        </form>
+      )
+    }
+  </main>
+</Layout>

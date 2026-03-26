@@ -1,12 +1,23 @@
 ---
 import ProductCard from "./ProductCard.astro";
-import products from "../data/products.json";
+import {
+    formatInr,
+    getCategoryMap,
+    getProductHref,
+    getProducts,
+    resolveProductImage,
+} from "../lib/catalog";
 
-const bestSellers = products.filter((p) => p.isBestSeller).slice(0, 4);
+const [products, categoryMap] = await Promise.all([
+    getProducts(),
+    getCategoryMap(),
+]);
+
+const bestSellers = products.filter((p) => p.data.isBestSeller).slice(0, 4);
 ---
 
 <section
-    class="bg-background-light dark:bg-background-dark border-y border-slate-200 dark:border-white/5 py-32 transition-colors duration-300"
+    class="bg-slate-950 dark:bg-background-dark border-y border-slate-200 dark:border-white/5 py-32 transition-colors duration-300"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
@@ -30,7 +41,19 @@ const bestSellers = products.filter((p) => p.isBestSeller).slice(0, 4);
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-            {bestSellers.map((product) => <ProductCard {...product} />)}
+            {
+                bestSellers.map((product) => (
+                    <ProductCard
+                        href={getProductHref(product)}
+                        category={categoryMap.get(product.data.category)?.data.title ||
+                            "Collection"}
+                        title={product.data.title}
+                        price={formatInr(product.data.priceInr)}
+                        image={resolveProductImage(product.data.image)}
+                        badge={product.data.badge || null}
+                    />
+                ))
+            }
         </div>
     </div>
 </section>

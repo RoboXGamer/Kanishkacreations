@@ -1,0 +1,414 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProductCard from "../../components/ProductCard.astro";
+import {
+    formatInr,
+    getCategoryMap,
+    getProductHref,
+    getProducts,
+    resolveProductImage,
+    type ProductEntry,
+} from "../../lib/catalog";
+
+export async function getStaticPaths() {
+    const products = await getProducts();
+
+    return products.map((product) => ({
+        params: { slug: product.id },
+        props: { product },
+    }));
+}
+
+const { product } = Astro.props as { product: ProductEntry };
+const [products, categoryMap] = await Promise.all([
+    getProducts(),
+    getCategoryMap(),
+]);
+const category = categoryMap.get(product.data.category);
+const relatedProducts = products
+    .filter((entry) => entry.id !== product.id)
+    .sort((a, b) => {
+        const aScore = a.data.category === product.data.category ? 1 : 0;
+        const bScore = b.data.category === product.data.category ? 1 : 0;
+        return bScore - aScore;
+    })
+    .slice(0, 4);
+
+const hasOriginalPrice = product.data.originalPriceInr > product.data.priceInr;
+const savingsPercent = hasOriginalPrice
+    ? Math.round(
+          ((product.data.originalPriceInr - product.data.priceInr) /
+              product.data.originalPriceInr) *
+              100,
+      )
+    : 0;
+
+const productImage = resolveProductImage(product.data.image);
+---
+
+<Layout title={`${product.data.title} | Kanishka Creations`}>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <nav
+            class="flex items-center gap-2 mb-10 text-[10px] md:text-xs font-medium uppercase tracking-widest text-slate-500 overflow-x-auto whitespace-nowrap pb-2 custom-scrollbar"
+        >
+            <a class="hover:text-primary transition-colors" href="/">Home</a>
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <a class="hover:text-primary transition-colors" href="/search"
+                >Collections</a
+            >
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <a
+                class="hover:text-primary transition-colors"
+                href={`/search?category=${product.data.category}`}
+                >{category?.data.title || "Collection"}</a
+            >
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <span
+                class="text-slate-900 dark:text-white truncate max-w-[150px] md:max-w-none"
+                >{product.data.title}</span
+            >
+        </nav>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+            <div class="lg:col-span-7 flex flex-col-reverse md:flex-row gap-6">
+                <div
+                    class="flex md:flex-col gap-4 overflow-x-auto md:overflow-y-auto pb-2 md:pb-0 custom-scrollbar"
+                >
+                    <div
+                        class="thumbnail active w-20 h-20 shrink-0 rounded-lg border-2 border-primary overflow-hidden cursor-pointer shadow-lg"
+                        data-image={productImage}
+                    >
+                        <img
+                            class="w-full h-full object-cover"
+                            src={productImage}
+                            alt={product.data.title}
+                        />
+                    </div>
+                    {
+                        [1, 2, 3].map(() => (
+                            <div
+                                class="thumbnail w-20 h-20 shrink-0 rounded-lg border border-slate-200 dark:border-white/10 overflow-hidden cursor-pointer hover:border-primary/50 transition-colors bg-white/5 opacity-80"
+                                data-image={productImage}
+                            >
+                                <img
+                                    class="w-full h-full object-cover"
+                                    src={productImage}
+                                    alt="Detail view"
+                                />
+                            </div>
+                        ))
+                    }
+                </div>
+
+                <div class="flex-1">
+                    <div
+                        class="aspect-[4/5] sm:aspect-square md:aspect-[4/5] rounded-xl overflow-hidden bg-white/5 border border-white/10 relative group shadow-2xl"
+                    >
+                        {
+                            product.data.badge && (
+                                <div class="absolute top-4 left-4 z-10 px-3 py-1 bg-primary text-background-dark text-[10px] font-bold rounded uppercase tracking-widest">
+                                    {product.data.badge}
+                                </div>
+                            )
+                        }
+                        <img
+                            id="main-product-image"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            src={productImage}
+                            alt={product.data.title}
+                        />
+                        <div
+                            class="absolute bottom-4 right-4 group-hover:scale-110 transition-transform"
+                        >
+                            <button
+                                id="zoom-button"
+                                class="bg-background-dark/60 backdrop-blur-md p-2 rounded-full border border-white/20 text-white hover:bg-primary hover:text-background-dark transition-all flex items-center justify-center shadow-lg"
+                                aria-label="Zoom image"
+                            >
+                                <span class="material-symbols-outlined text-lg"
+                                    >zoom_in</span
+                                >
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 flex flex-col justify-center">
+                <div class="space-y-8">
+                    <header>
+                        <h1
+                            class="text-3xl md:text-5xl font-bold dark:text-white text-slate-900 leading-tight mb-4 tracking-tight"
+                        >
+                            {product.data.title}
+                        </h1>
+                        <p
+                            class="text-slate-500 dark:text-slate-400 leading-relaxed max-w-md"
+                        >
+                            {product.data.description}
+                        </p>
+                    </header>
+
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <span class="text-4xl font-bold text-primary">
+                            {formatInr(product.data.priceInr)}
+                        </span>
+                        {
+                            hasOriginalPrice && (
+                                <>
+                                    <span class="text-lg text-slate-400 line-through">
+                                        {formatInr(product.data.originalPriceInr)}
+                                    </span>
+                                    <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded tracking-tighter uppercase">
+                                        Save {savingsPercent}%
+                                    </span>
+                                </>
+                            )
+                        }
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        {
+                            product.data.details.map((detail) => (
+                                <div class="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-white/5 backdrop-blur-sm">
+                                    <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">
+                                        {detail.label}
+                                    </p>
+                                    <p class="text-sm font-medium dark:text-white">
+                                        {detail.value}
+                                    </p>
+                                </div>
+                            ))
+                        }
+                    </div>
+
+                    <div class="space-y-4 pt-4">
+                        <button
+                            id="add-to-cart"
+                            class="w-full bg-primary hover:bg-primary/90 text-background-dark font-bold py-5 rounded-xl transition-all transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-3 shadow-xl shadow-primary/20"
+                            data-product-slug={product.id}
+                            data-legacy-id={product.data.legacyId}
+                        >
+                            <span class="material-symbols-outlined">shopping_bag</span>
+                            <span id="cart-button-text">ADD TO CART</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="mt-32">
+            <div
+                class="border-b border-slate-200 dark:border-white/10 mb-12 flex items-center h-16"
+            >
+                <span
+                    class="border-b-2 border-primary h-full flex items-center text-xs font-bold tracking-[0.2em] text-slate-900 dark:text-white uppercase"
+                >
+                    Specifications
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-20">
+                <div class="space-y-12">
+                    <div>
+                        <h3
+                            class="text-xs font-bold tracking-widest uppercase text-primary mb-6"
+                        >
+                            Technical Details
+                        </h3>
+                        <dl class="space-y-4">
+                            {
+                                product.data.specifications.map((spec) => (
+                                    <div class="flex justify-between py-3 border-b border-slate-100 dark:border-white/5">
+                                        <dt class="text-sm text-slate-500">
+                                            {spec.label}
+                                        </dt>
+                                        <dd class="text-sm font-medium dark:text-white">
+                                            {spec.value}
+                                        </dd>
+                                    </div>
+                                ))
+                            }
+                        </dl>
+                    </div>
+                </div>
+                <div class="space-y-8">
+                    <h3
+                        class="text-xs font-bold tracking-widest uppercase text-primary mb-6"
+                    >
+                        Care Instructions
+                    </h3>
+                    <div
+                        class="prose prose-invert prose-sm text-slate-500 dark:text-slate-400 leading-relaxed"
+                    >
+                        <ul class="list-disc pl-5 space-y-3">
+                            {
+                                product.data.careInstructions.map((instruction) => (
+                                    <li>{instruction}</li>
+                                ))
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section
+            class="mt-32 pt-32 border-t border-slate-200 dark:border-white/10"
+        >
+            <div class="flex items-end justify-between mb-12">
+                <div>
+                    <span
+                        class="text-xs font-bold tracking-[0.3em] uppercase text-primary mb-2 block"
+                        >Curation</span
+                    >
+                    <h2 class="text-3xl font-bold dark:text-white">
+                        Similar Masterpieces
+                    </h2>
+                </div>
+                <a
+                    class="text-sm font-bold uppercase tracking-widest text-primary hover:underline decoration-2 underline-offset-4 transition-all"
+                    href="/search">View All Products</a
+                >
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {
+                    relatedProducts.map((entry) => (
+                        <ProductCard
+                            href={getProductHref(entry)}
+                            category={categoryMap.get(entry.data.category)?.data.title ||
+                                "Collection"}
+                            title={entry.data.title}
+                            price={formatInr(entry.data.priceInr)}
+                            image={resolveProductImage(entry.data.image)}
+                            badge={entry.data.badge || null}
+                        />
+                    ))
+                }
+            </div>
+        </section>
+    </main>
+</Layout>
+
+<div
+    id="zoom-modal"
+    class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-background-dark/95 backdrop-blur-xl p-4 sm:p-10 cursor-zoom-out"
+>
+    <button
+        id="close-zoom"
+        class="absolute top-8 right-8 text-white hover:text-primary transition-colors"
+    >
+        <span class="material-symbols-outlined text-4xl">close</span>
+    </button>
+    <img
+        id="zoomed-image"
+        src={productImage}
+        alt={product.data.title}
+        class="max-w-full max-h-full object-contain rounded-xl shadow-2xl transition-transform duration-500 ease-out"
+    />
+</div>
+
+<script>
+    import { addToCart, getCartCount, readCart } from "../../lib/checkout/cart";
+
+    const mainImage = document.getElementById(
+        "main-product-image",
+    ) as HTMLImageElement;
+    const thumbnails = document.querySelectorAll(".thumbnail");
+    const zoomBtn = document.getElementById("zoom-button");
+    const zoomModal = document.getElementById("zoom-modal");
+    const closeZoom = document.getElementById("close-zoom");
+    const zoomedImg = document.getElementById(
+        "zoomed-image",
+    ) as HTMLImageElement;
+    const inquiryBtn = document.getElementById("add-to-cart");
+    const inquiryText = document.getElementById("cart-button-text");
+
+    thumbnails.forEach((thumb) => {
+        thumb.addEventListener("click", () => {
+            const newSrc = thumb.getAttribute("data-image");
+            if (!newSrc || !mainImage) return;
+
+            mainImage.src = newSrc;
+            if (zoomedImg) zoomedImg.src = newSrc;
+
+            thumbnails.forEach((item) => {
+                item.classList.remove(
+                    "border-2",
+                    "border-primary",
+                    "active",
+                    "shadow-lg",
+                );
+                item.classList.add(
+                    "border",
+                    "border-slate-200",
+                    "dark:border-white/10",
+                );
+            });
+            thumb.classList.add("border-2", "border-primary", "active", "shadow-lg");
+            thumb.classList.remove("border", "border-slate-200", "dark:border-white/10");
+        });
+    });
+
+    const openZoom = () => {
+        zoomModal?.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+    };
+
+    const closeZoomModal = () => {
+        zoomModal?.classList.add("hidden");
+        document.body.style.overflow = "";
+    };
+
+    zoomBtn?.addEventListener("click", (event) => {
+        event.stopPropagation();
+        openZoom();
+    });
+
+    closeZoom?.addEventListener("click", closeZoomModal);
+    zoomModal?.addEventListener("click", closeZoomModal);
+
+    inquiryBtn?.addEventListener("click", () => {
+        const productSlug = inquiryBtn.getAttribute("data-product-slug");
+        if (!productSlug) return;
+
+        addToCart(productSlug, 1);
+
+        if (inquiryText) inquiryText.textContent = "ADDED";
+        inquiryBtn.classList.add("bg-slate-700", "text-white", "pointer-events-none");
+        inquiryBtn.classList.remove("bg-primary", "text-background-dark");
+
+        const cartCount = document.getElementById("cart-count");
+        if (cartCount) {
+            cartCount.textContent = String(getCartCount(readCart().items));
+        }
+    });
+
+    const productSlug = inquiryBtn?.getAttribute("data-product-slug");
+    const legacyId = inquiryBtn?.getAttribute("data-legacy-id");
+    const inquiries = readCart().items.map((item) => item.productSlug);
+    if (
+        (productSlug && inquiries.includes(productSlug)) ||
+        (legacyId && inquiries.includes(legacyId))
+    ) {
+        if (inquiryText) inquiryText.textContent = "ADDED";
+        inquiryBtn?.classList.add("bg-slate-700", "text-white", "pointer-events-none");
+        inquiryBtn?.classList.remove("bg-primary", "text-background-dark");
+    }
+</script>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        height: 3px;
+        width: 3px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(245, 214, 61, 0.2);
+        border-radius: 10px;
+    }
+</style>

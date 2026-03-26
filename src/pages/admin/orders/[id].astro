@@ -1,0 +1,277 @@
+---
+export const prerender = false;
+
+import Layout from "../../../layouts/Layout.astro";
+import { ADMIN_COOKIE_NAME, isAdminCookieValid } from "../../../lib/admin/auth";
+import { convexQuery, isConvexConfigured } from "../../../lib/convex/server";
+import { formatInr } from "../../../lib/catalog";
+import {
+    getFulfillmentStatusLabel,
+    getFulfillmentStatusTone,
+    getOrderStatusLabel,
+    getOrderStatusTone,
+    getRefundStatusLabel,
+    getRefundStatusTone,
+} from "../../../lib/admin/orders";
+
+if (!isAdminCookieValid(Astro.cookies.get(ADMIN_COOKIE_NAME)?.value)) {
+    return Astro.redirect(`/admin/login?next=/admin/orders/${Astro.params.id}`);
+}
+
+let order: any = null;
+let error = "";
+
+if (!isConvexConfigured()) {
+    error = "Convex is not configured.";
+} else {
+    try {
+        order = await convexQuery<any>("orders:getOrderById", { orderId: Astro.params.id });
+        if (!order) {
+            error = "Order not found.";
+        }
+    } catch (cause) {
+        error = cause instanceof Error ? cause.message : "Unable to load order.";
+    }
+}
+
+const isArchived = Boolean(order?.archivedAt);
+const addressText = order
+    ? [
+          order.address?.line1,
+          order.address?.line2,
+          order.address?.landmark,
+          order.address ? `${order.address.city}, ${order.address.state} ${order.address.postalCode}` : "",
+          order.address?.country,
+      ].filter(Boolean)
+          .join("\n")
+    : "";
+const customerNotes = order?.notesFromCustomer || "No notes shared.";
+const customerPhone = order?.customer?.phone || "No phone shared.";
+---
+
+<Layout title="Admin Order Detail | Kanishka Creations">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <a href="/admin/orders" class="inline-flex text-sm font-bold text-primary hover:underline">
+                Back to orders
+            </a>
+            <form action={`/api/admin/orders/${Astro.params.id}/archive`} method="POST">
+                <input type="hidden" name="action" value={isArchived ? "restore" : "archive"} />
+                <button class={`rounded-xl px-4 py-2 font-bold transition ${isArchived ? "border border-emerald-300 text-emerald-700 hover:border-emerald-400 dark:border-emerald-500/30 dark:text-emerald-200" : "border border-slate-300 hover:border-primary hover:text-primary"}`}>
+                    {isArchived ? "Restore order" : "Archive order"}
+                </button>
+            </form>
+        </div>
+
+        {
+            error ? (
+                <section class="rounded-3xl border border-red-200 bg-red-50 p-8 text-red-700">
+                    {error}
+                </section>
+            ) : (
+                <div class="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-10 items-start">
+                    <section class="space-y-8">
+                        <div class="rounded-3xl border border-slate-200 dark:border-white/10 p-8 bg-white/70 dark:bg-white/5">
+                            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8">
+                                <div>
+                                    <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">
+                                        {order.orderNumber}
+                                    </span>
+                                    <h1 class="text-3xl font-black tracking-tight mb-2">
+                                        {order.customer?.fullName}
+                                    </h1>
+                                    <p class="text-slate-500 dark:text-slate-400">
+                                        Created {new Date(order.createdAt).toLocaleString("en-IN")}
+                                    </p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm text-slate-500">Total</p>
+                                    <p class="text-2xl font-black">{formatInr(order.totalInr)}</p>
+                                </div>
+                            </div>
+
+                            <div class="mb-8 flex flex-wrap gap-2">
+                                <span class={`inline-flex rounded-full px-3 py-1 text-xs font-bold capitalize ${getOrderStatusTone(order.orderStatus)}`}>
+                                    {getOrderStatusLabel(order.orderStatus)}
+                                </span>
+                                <span class={`inline-flex rounded-full px-3 py-1 text-xs font-bold capitalize ${getFulfillmentStatusTone(order.fulfillmentStatus)}`}>
+                                    {getFulfillmentStatusLabel(order.fulfillmentStatus)}
+                                </span>
+                                <span class={`inline-flex rounded-full px-3 py-1 text-xs font-bold capitalize ${getRefundStatusTone(order.refundStatus)}`}>
+                                    {getRefundStatusLabel(order.refundStatus)}
+                                </span>
+                                {isArchived && (
+                                    <span class="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-slate-700 dark:bg-white/10 dark:text-slate-200">
+                                        Archived
+                                    </span>
+                                )}
+                            </div>
+
+                            {isArchived && (
+                                <div class="mb-8 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-100">
+                                    This order is archived. Restore it to edit status, notes, cancellation, or refund state.
+                                </div>
+                            )}
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                                <div>
+                                    <h2 class="font-bold mb-3">Address</h2>
+                                    <pre class="whitespace-pre-wrap text-slate-500 dark:text-slate-400 font-sans">{addressText}</pre>
+                                </div>
+                                <div>
+                                    <h2 class="font-bold mb-3">Customer notes</h2>
+                                    <p class="text-slate-500 dark:text-slate-400 whitespace-pre-wrap">
+                                        {customerNotes}
+                                    </p>
+                                </div>
+                                <div>
+                                    <h2 class="font-bold mb-3">Phone</h2>
+                                    <p class="text-slate-500 dark:text-slate-400">
+                                        {customerPhone}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                {(order.items || []).map((item: any) => (
+                                    <div class="flex items-start gap-4 border-b border-slate-100 dark:border-white/10 pb-4">
+                                        <img src={item.productImageSnapshot} alt={item.productTitleSnapshot} class="w-20 h-20 rounded-2xl object-cover" />
+                                        <div class="flex-1">
+                                            <h3 class="font-bold">{item.productTitleSnapshot}</h3>
+                                            <p class="text-sm text-slate-500">
+                                                {item.quantity} x {formatInr(item.unitPriceInr)}
+                                            </p>
+                                        </div>
+                                        <span class="font-bold">{formatInr(item.lineTotalInr)}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div class="rounded-3xl border border-slate-200 dark:border-white/10 p-8 bg-white/70 dark:bg-white/5">
+                            <h2 class="text-xl font-bold mb-4">Event timeline</h2>
+                            <div class="space-y-4">
+                                {(order.events || []).map((event: any) => (
+                                    <div class="border-l-2 border-primary pl-4">
+                                        <p class="font-bold">{event.message}</p>
+                                        <p class="text-sm text-slate-500">
+                                            {new Date(event.createdAt).toLocaleString("en-IN")}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    <aside class="space-y-6">
+                        <section class="rounded-3xl border border-slate-200 dark:border-white/10 p-8 bg-white/70 dark:bg-white/5">
+                            <h2 class="text-xl font-bold mb-4">Update status</h2>
+                            {isArchived ? (
+                                <p class="text-sm text-slate-500 dark:text-slate-400">
+                                    Restore the order to change its operational state.
+                                </p>
+                            ) : (
+                                <form action={`/api/admin/orders/${order._id}/status`} method="POST" class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-bold mb-2" for="orderStatus">Order status</label>
+                                        <select id="orderStatus" name="orderStatus" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white">
+                                            <option value="submitted" selected={order.orderStatus === "submitted"}>Submitted</option>
+                                            <option value="awaiting_confirmation" selected={order.orderStatus === "awaiting_confirmation"}>Awaiting confirmation</option>
+                                            <option value="confirmed" selected={order.orderStatus === "confirmed"}>Confirmed</option>
+                                            <option value="cancel_requested" selected={order.orderStatus === "cancel_requested"}>Cancel requested</option>
+                                            <option value="cancelled" selected={order.orderStatus === "cancelled"}>Cancelled</option>
+                                            <option value="completed" selected={order.orderStatus === "completed"}>Completed</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold mb-2" for="fulfillmentStatus">Fulfillment</label>
+                                        <select id="fulfillmentStatus" name="fulfillmentStatus" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white">
+                                            <option value="unstarted" selected={order.fulfillmentStatus === "unstarted"}>Unstarted</option>
+                                            <option value="processing" selected={order.fulfillmentStatus === "processing"}>Processing</option>
+                                            <option value="packed" selected={order.fulfillmentStatus === "packed"}>Packed</option>
+                                            <option value="shipped" selected={order.fulfillmentStatus === "shipped"}>Shipped</option>
+                                            <option value="delivered" selected={order.fulfillmentStatus === "delivered"}>Delivered</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold mb-2" for="note">Internal note</label>
+                                        <textarea id="note" name="note" rows="4" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400">{order.internalAdminNotes || ""}</textarea>
+                                    </div>
+                                    <button class="w-full rounded-xl bg-primary px-4 py-3 font-bold text-background-dark">
+                                        Save status
+                                    </button>
+                                </form>
+                            )}
+                        </section>
+
+                        <section class="rounded-3xl border border-slate-200 dark:border-white/10 p-8 bg-white/70 dark:bg-white/5">
+                            <h2 class="text-xl font-bold mb-4">Cancellation</h2>
+                            {isArchived ? (
+                                <p class="text-sm text-slate-500 dark:text-slate-400">
+                                    Cancellation controls are disabled while archived.
+                                </p>
+                            ) : (
+                                <div class="grid grid-cols-1 gap-3">
+                                    <form action={`/api/admin/orders/${order._id}/cancel`} method="POST">
+                                        <input type="hidden" name="action" value="request" />
+                                        <button class="w-full rounded-xl border border-slate-300 px-4 py-3 font-bold hover:border-primary hover:text-primary">
+                                            Mark cancel requested
+                                        </button>
+                                    </form>
+                                    <form action={`/api/admin/orders/${order._id}/cancel`} method="POST">
+                                        <input type="hidden" name="action" value="cancel" />
+                                        <button class="w-full rounded-xl border border-slate-300 px-4 py-3 font-bold hover:border-primary hover:text-primary">
+                                            Mark cancelled
+                                        </button>
+                                    </form>
+                                    <form action={`/api/admin/orders/${order._id}/cancel`} method="POST">
+                                        <input type="hidden" name="action" value="reject" />
+                                        <button class="w-full rounded-xl border border-slate-300 px-4 py-3 font-bold hover:border-primary hover:text-primary">
+                                            Reject cancel request
+                                        </button>
+                                    </form>
+                                </div>
+                            )}
+                        </section>
+
+                        <section class="rounded-3xl border border-slate-200 dark:border-white/10 p-8 bg-white/70 dark:bg-white/5">
+                            <h2 class="text-xl font-bold mb-4">Refund tracking</h2>
+                            {isArchived ? (
+                                <p class="text-sm text-slate-500 dark:text-slate-400">
+                                    Refund controls are disabled while archived.
+                                </p>
+                            ) : (
+                                <div class="grid grid-cols-1 gap-3">
+                                    <form action={`/api/admin/orders/${order._id}/refund`} method="POST">
+                                        <input type="hidden" name="action" value="request" />
+                                        <button class="w-full rounded-xl border border-slate-300 px-4 py-3 font-bold hover:border-primary hover:text-primary">
+                                            Mark refund requested
+                                        </button>
+                                    </form>
+                                    <form action={`/api/admin/orders/${order._id}/refund`} method="POST">
+                                        <input type="hidden" name="action" value="pending" />
+                                        <button class="w-full rounded-xl border border-slate-300 px-4 py-3 font-bold hover:border-primary hover:text-primary">
+                                            Mark refund pending
+                                        </button>
+                                    </form>
+                                    <form action={`/api/admin/orders/${order._id}/refund`} method="POST">
+                                        <input type="hidden" name="action" value="refund" />
+                                        <button class="w-full rounded-xl border border-slate-300 px-4 py-3 font-bold hover:border-primary hover:text-primary">
+                                            Mark refunded
+                                        </button>
+                                    </form>
+                                    <form action={`/api/admin/orders/${order._id}/refund`} method="POST">
+                                        <input type="hidden" name="action" value="reject" />
+                                        <button class="w-full rounded-xl border border-slate-300 px-4 py-3 font-bold hover:border-primary hover:text-primary">
+                                            Reject refund request
+                                        </button>
+                                    </form>
+                                </div>
+                            )}
+                        </section>
+                    </aside>
+                </div>
+            )
+        }
+    </main>
+</Layout>

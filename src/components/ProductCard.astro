@@ -1,6 +1,6 @@
 ---
 interface Props {
-    id: string;
+    href: string;
     category: string;
     title: string;
     price: string;
@@ -8,13 +8,13 @@ interface Props {
     badge?: string | null;
 }
 
-const { id, category, title, price, image, badge } = Astro.props;
+const { href, category, title, price, image, badge } = Astro.props;
 ---
 
 <div
-    class="group bg-background-light dark:bg-background-dark rounded-xl p-4 transition-all hover:ring-2 hover:ring-primary/50 relative"
+    class="group bg-slate-950 dark:bg-background-dark rounded-xl p-4 transition-all hover:ring-2 hover:ring-primary/50 relative"
 >
-    <a href={`/product?id=${id}`} class="block">
+    <a href={href} class="block">
         <div
             class="relative aspect-square overflow-hidden rounded-lg mb-4 bg-slate-200 dark:bg-white/5"
         >

@@ -1,0 +1,240 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Checkout | Kanishka Creations">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="max-w-3xl mb-10">
+            <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">
+                Enquiry Checkout
+            </span>
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight mb-4">
+                Share delivery details and we will handle the rest.
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed">
+                This checkout records your enquiry in the backend and prepares
+                WhatsApp and email-ready follow-up with the full cart summary.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-10 items-start">
+            <section class="rounded-3xl border border-slate-200 dark:border-white/10 p-8 bg-white/70 dark:bg-white/5">
+                <form id="checkout-form" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold mb-2" for="fullName">Full name</label>
+                        <input id="fullName" name="fullName" class="w-full rounded-xl border border-slate-300 bg-slate-900/60 dark:bg-white/5 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2" for="phone">Phone number</label>
+                        <input id="phone" name="phone" type="tel" inputmode="tel" class="w-full rounded-xl border border-slate-300 bg-slate-900/60 dark:bg-white/5 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2" for="line1">Address line 1</label>
+                        <input id="line1" name="line1" class="w-full rounded-xl border border-slate-300 bg-slate-900/60 dark:bg-white/5 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2" for="line2">Address line 2</label>
+                        <input id="line2" name="line2" class="w-full rounded-xl border border-slate-300 bg-slate-900/60 dark:bg-white/5 px-4 py-3 outline-none text-white placeholder:text-slate-400" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2" for="landmark">Landmark</label>
+                        <input id="landmark" name="landmark" class="w-full rounded-xl border border-slate-300 bg-slate-900/60 dark:bg-white/5 px-4 py-3 outline-none text-white placeholder:text-slate-400" />
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="city">City</label>
+                            <input id="city" name="city" class="w-full rounded-xl border border-slate-300 bg-slate-900/60 dark:bg-white/5 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="state">State</label>
+                            <input id="state" name="state" class="w-full rounded-xl border border-slate-300 bg-slate-900/60 dark:bg-white/5 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="postalCode">Postal code</label>
+                            <input id="postalCode" name="postalCode" class="w-full rounded-xl border border-slate-300 bg-slate-900/60 dark:bg-white/5 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="country">Country</label>
+                            <input id="country" name="country" value="India" class="w-full rounded-xl border border-slate-300 bg-slate-900/60 dark:bg-white/5 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2" for="notes">Notes</label>
+                        <textarea id="notes" name="notes" rows="4" class="w-full rounded-xl border border-slate-300 bg-slate-900/60 dark:bg-white/5 px-4 py-3 outline-none text-white placeholder:text-slate-400"></textarea>
+                    </div>
+
+                    <p id="checkout-error" class="hidden text-sm font-medium text-red-600"></p>
+
+                    <button
+                        id="checkout-submit"
+                        type="submit"
+                        class="w-full bg-primary hover:bg-primary/90 text-background-dark font-bold py-4 rounded-xl"
+                    >
+                        Create Enquiry
+                    </button>
+                </form>
+            </section>
+
+            <aside class="rounded-3xl border border-slate-200 dark:border-white/10 p-8 bg-white/70 dark:bg-white/5">
+                <h2 class="text-xl font-bold mb-4">Order summary</h2>
+                <div id="checkout-summary" class="space-y-4">
+                    <p class="text-slate-500 dark:text-slate-400">Loading your cart...</p>
+                </div>
+            </aside>
+        </div>
+    </main>
+</Layout>
+
+<script>
+    import { readCart } from "../lib/checkout/cart";
+
+    const summary = document.getElementById("checkout-summary") as HTMLDivElement | null;
+    const form = document.getElementById("checkout-form") as HTMLFormElement | null;
+    const errorEl = document.getElementById("checkout-error") as HTMLParagraphElement | null;
+    const submitBtn = document.getElementById("checkout-submit") as HTMLButtonElement | null;
+
+    type ValidationItem = {
+        productImage: string;
+        productTitle: string;
+        quantity: number;
+        unitPriceFormatted: string;
+        lineTotalFormatted: string;
+    };
+
+    async function loadCartSummary() {
+        if (!summary || !form) {
+            return;
+        }
+
+        const cart = readCart();
+        const response = await fetch("/api/cart/validate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ items: cart.items }),
+        });
+        const payload = (await response.json()) as {
+            ok: boolean;
+            items?: ValidationItem[];
+            totalFormatted?: string;
+        };
+
+        if (!payload.ok || !payload.items?.length) {
+            summary.innerHTML = `
+                <p class="text-slate-500 dark:text-slate-400">Your cart is empty.</p>
+                <a href="/search" class="inline-flex text-primary font-bold hover:underline">Browse products</a>
+            `;
+            form.setAttribute("hidden", "hidden");
+            return;
+        }
+
+        summary.innerHTML = `
+            ${payload.items
+                .map(
+                    (item) => `
+                        <div class="flex items-start gap-3">
+                            <img src="${item.productImage}" alt="${item.productTitle}" class="w-16 h-16 rounded-xl object-cover" />
+                            <div class="flex-1">
+                                <h3 class="font-bold">${item.productTitle}</h3>
+                                <p class="text-sm text-slate-500">${item.quantity} x ${item.unitPriceFormatted}</p>
+                            </div>
+                            <span class="font-bold">${item.lineTotalFormatted}</span>
+                        </div>
+                    `,
+                )
+                .join("")}
+            <div class="pt-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between font-bold">
+                <span>Total</span>
+                <span>${payload.totalFormatted || "-"}</span>
+            </div>
+        `;
+    }
+
+    form?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        errorEl?.classList.add("hidden");
+
+        const cart = readCart();
+        if (!cart.items.length) {
+            if (errorEl) {
+                errorEl.textContent = "Your cart is empty.";
+                errorEl.classList.remove("hidden");
+            }
+            return;
+        }
+
+        const validationResponse = await fetch("/api/cart/validate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ items: cart.items }),
+        });
+        const validation = (await validationResponse.json()) as {
+            ok: boolean;
+            items?: ValidationItem[];
+            error?: string;
+        };
+
+        if (!validation.ok || !validation.items?.length) {
+            if (errorEl) {
+                errorEl.textContent = validation.error || "Your cart is empty.";
+                errorEl.classList.remove("hidden");
+            }
+            submitBtn?.removeAttribute("disabled");
+            if (submitBtn) {
+                submitBtn.textContent = "Create Enquiry";
+            }
+            return;
+        }
+
+        submitBtn?.setAttribute("disabled", "disabled");
+        if (submitBtn) {
+            submitBtn.textContent = "Creating enquiry...";
+        }
+
+        const formData = new FormData(form);
+        const payload = {
+            fullName: formData.get("fullName"),
+            phone: formData.get("phone"),
+            address: {
+                line1: formData.get("line1"),
+                line2: formData.get("line2"),
+                landmark: formData.get("landmark"),
+                city: formData.get("city"),
+                state: formData.get("state"),
+                postalCode: formData.get("postalCode"),
+                country: formData.get("country"),
+            },
+            notes: formData.get("notes"),
+            items: cart.items,
+        };
+
+        const response = await fetch("/api/checkout/create-enquiry-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+        const result = (await response.json()) as {
+            ok: boolean;
+            error?: string;
+            successUrl?: string;
+        };
+
+        if (!result.ok) {
+            if (errorEl) {
+                errorEl.textContent = result.error || "Unable to create enquiry.";
+                errorEl.classList.remove("hidden");
+            }
+            submitBtn?.removeAttribute("disabled");
+            if (submitBtn) {
+                submitBtn.textContent = "Create Enquiry";
+            }
+            return;
+        }
+
+        window.localStorage.removeItem("kc_cart_v1");
+        window.location.href = result.successUrl || "/checkout/success";
+    });
+
+    loadCartSummary();
+</script>

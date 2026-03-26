@@ -1,7 +1,8 @@
 ---
-import categories from "../data/categories.json";
+import { getCategories } from "../lib/catalog";
 
-const shopLinks = categories;
+const shopLinks = await getCategories();
+const salesEmail = import.meta.env.PUBLIC_SALES_EMAIL || "sales@kc-creations.in";
 ---
 
 <footer
@@ -43,7 +44,7 @@ const shopLinks = categories;
                                     class="hover:text-primary transition-colors"
                                     href={`/search?category=${link.id}`}
                                 >
-                                    {link.title}
+                                    {link.data.title}
                                 </a>
                             </li>
                         ))
@@ -56,14 +57,14 @@ const shopLinks = categories;
                 </h3>
                 <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">
                     Reach out to us at <a
-                        href="mailto:sales@kc-creations.in"
+                        href={`mailto:${salesEmail}`}
                         class="text-primary hover:underline"
-                        >sales@kc-creations.in</a
+                        >{salesEmail}</a
                     >
                 </p>
                 <div class="flex flex-col gap-2">
                     <a
-                        href="mailto:sales@kc-creations.in"
+                        href={`mailto:${salesEmail}`}
                         class="bg-primary text-background-dark font-bold py-2.5 rounded-lg text-sm hover:bg-primary/90 transition-all text-center"
                         >Email us</a
                     >
@@ -73,7 +74,7 @@ const shopLinks = categories;
         <div
             class="pt-10 border-t border-slate-200 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium"
         >
-            <p>© 2026 Kanishka Creations. All rights reserved.</p>
+            <p>&copy; 2026 Kanishka Creations. All rights reserved.</p>
             <div class="flex gap-6 uppercase tracking-widest">
                 <a class="hover:text-white" href="/coming-soon">Terms</a>
                 <a class="hover:text-white" href="/coming-soon">Sitemap</a>

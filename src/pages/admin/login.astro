@@ -1,0 +1,39 @@
+---
+export const prerender = false;
+
+import Layout from "../../layouts/Layout.astro";
+
+const error = Astro.url.searchParams.get("error");
+const next = Astro.url.searchParams.get("next") || "/admin";
+---
+
+<Layout title="Admin Login | Kanishka Creations">
+    <main class="max-w-lg mx-auto px-4 py-24">
+        <section class="rounded-3xl border border-slate-200 dark:border-white/10 p-8 bg-white/70 dark:bg-white/5">
+            <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">
+                Admin Access
+            </span>
+            <h1 class="text-3xl font-bold mb-4">Admin dashboard login</h1>
+            <p class="text-slate-500 dark:text-slate-400 mb-6">
+                Enter the admin secret to manage products, categories, and enquiry orders.
+            </p>
+            {
+                error && (
+                    <p class="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+                        Invalid admin secret.
+                    </p>
+                )
+            }
+            <form action="/api/admin/login" method="POST" class="space-y-4">
+                <input type="hidden" name="next" value={next} />
+                <div>
+                    <label class="block text-sm font-bold mb-2" for="secret">Admin secret</label>
+                    <input id="secret" name="secret" type="password" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white placeholder:text-slate-400" required />
+                </div>
+                <button class="w-full bg-primary hover:bg-primary/90 text-background-dark font-bold py-3 rounded-xl">
+                    Access dashboard
+                </button>
+            </form>
+        </section>
+    </main>
+</Layout>

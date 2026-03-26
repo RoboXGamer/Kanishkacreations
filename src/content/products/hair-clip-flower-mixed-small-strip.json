@@ -1,0 +1,36 @@
+{
+  "title": "Hair Clip Flower Mixed Small Strip",
+  "legacyId": "asset-008",
+  "category": "hair-accessories",
+  "priceInr": 599,
+  "originalPriceInr": 719,
+  "image": "hair_clip_flower_mixed_small_strip.jpeg",
+  "badge": "",
+  "isBestSeller": true,
+  "description": "Catalog item generated from local image asset hair_clip_flower_mixed_small_strip.jpeg. Update this copy with final merchandising details.",
+  "details": [
+    {
+      "label": "Material",
+      "value": "Durable Fashion Accessory Grade"
+    },
+    {
+      "label": "Use Case",
+      "value": "Daily Styling & Gifting"
+    }
+  ],
+  "specifications": [
+    {
+      "label": "Pack Type",
+      "value": "Catalog Display Variant"
+    },
+    {
+      "label": "Reference",
+      "value": "hair_clip_flower_mixed_small_strip"
+    }
+  ],
+  "careInstructions": [
+    "Store in a clean, dry place.",
+    "Avoid prolonged direct sunlight exposure.",
+    "Handle gently during transport and display."
+  ]
+}

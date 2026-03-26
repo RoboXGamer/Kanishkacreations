@@ -1,0 +1,123 @@
+---
+export const prerender = false;
+
+import Layout from "../../../layouts/Layout.astro";
+import { ADMIN_COOKIE_NAME, isAdminCookieValid } from "../../../lib/admin/auth";
+import { convexQuery, isConvexConfigured } from "../../../lib/convex/server";
+import { formatLineItems, formatLines } from "../../../lib/admin/catalog";
+
+if (!isAdminCookieValid(Astro.cookies.get(ADMIN_COOKIE_NAME)?.value)) {
+  return Astro.redirect(`/admin/login?next=/admin/products/${Astro.params.slug}`);
+}
+
+let product: any = null;
+let categories: Array<any> = [];
+let error = "";
+
+if (!isConvexConfigured()) {
+  error = "Convex is not configured.";
+} else {
+  try {
+    [product, categories] = await Promise.all([
+      convexQuery<any>("catalogAdmin:getProduct", { slug: Astro.params.slug }),
+      convexQuery<Array<any>>("catalog:listCategories", {}),
+    ]);
+
+    if (!product) {
+      error = "Product not found.";
+    }
+  } catch (cause) {
+    error = cause instanceof Error ? cause.message : "Unable to load product.";
+  }
+}
+---
+
+<Layout title={product ? `${product.title} | Admin Products` : "Admin Product | Kanishka Creations"}>
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+      <div>
+        <a href="/admin/products" class="inline-flex text-sm font-bold text-primary hover:underline mb-4">Back to products</a>
+        <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">Admin</span>
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-3">{product?.title || "Edit product"}</h1>
+      </div>
+      {product && (
+        <form action={`/api/admin/products/${product.slug}`} method="POST" onsubmit="return confirm('Delete this product?')">
+          <input type="hidden" name="action" value="delete" />
+          <button class="rounded-xl border border-rose-300 px-4 py-3 font-bold text-rose-700 hover:border-rose-400 hover:text-rose-800 dark:border-rose-500/30 dark:text-rose-200">Delete product</button>
+        </form>
+      )}
+    </div>
+
+    {
+      error ? (
+        <section class="rounded-3xl border border-red-200 bg-red-50 p-8 text-red-700">{error}</section>
+      ) : (
+        <form action={`/api/admin/products/${product.slug}`} method="POST" class="space-y-6">
+          <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+            <h2 class="text-xl font-bold mb-6">Core details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-bold mb-2" for="slug">Slug</label>
+                <input id="slug" name="slug" value={product.slug} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="title">Title</label>
+                <input id="title" name="title" value={product.title} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="legacyId">Legacy ID</label>
+                <input id="legacyId" name="legacyId" value={product.legacyId} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="categorySlug">Category</label>
+                <select id="categorySlug" name="categorySlug" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required>
+                  {categories.map((category) => <option value={category.slug} selected={category.slug === product.categorySlug}>{category.title}</option>)}
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="priceInr">Price (INR)</label>
+                <input id="priceInr" name="priceInr" type="number" min="0" step="1" value={product.priceInr} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="originalPriceInr">Original price (INR)</label>
+                <input id="originalPriceInr" name="originalPriceInr" type="number" min="0" step="1" value={product.originalPriceInr} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="image">Image URL or asset filename</label>
+                <input id="image" name="image" value={product.image} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required />
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2" for="badge">Badge</label>
+                <input id="badge" name="badge" value={product.badge} class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" />
+              </div>
+            </div>
+            <label class="mt-4 inline-flex items-center gap-3 text-sm font-semibold text-slate-600 dark:text-slate-300">
+              <input type="checkbox" name="isBestSeller" checked={product.isBestSeller} class="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary" />
+              Show on homepage best sellers
+            </label>
+          </section>
+
+          <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+            <h2 class="text-xl font-bold mb-6">Description</h2>
+            <label class="block text-sm font-bold mb-2" for="description">Description</label>
+            <textarea id="description" name="description" rows="5" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white" required>{product.description}</textarea>
+          </section>
+
+          <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 md:p-8">
+            <h2 class="text-xl font-bold mb-6">Highlights</h2>
+            <label class="block text-sm font-bold mb-2" for="details">Details</label>
+            <textarea id="details" name="details" rows="5" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white">{formatLineItems(product.details || [])}</textarea>
+            <label class="block text-sm font-bold mb-2 mt-4" for="specifications">Specifications</label>
+            <textarea id="specifications" name="specifications" rows="5" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white">{formatLineItems(product.specifications || [])}</textarea>
+            <label class="block text-sm font-bold mb-2 mt-4" for="careInstructions">Care instructions</label>
+            <textarea id="careInstructions" name="careInstructions" rows="4" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none text-white">{formatLines(product.careInstructions || [])}</textarea>
+          </section>
+
+          <div class="flex flex-wrap gap-3">
+            <button class="rounded-2xl bg-primary px-6 py-4 text-lg font-bold text-background-dark shadow-xl shadow-primary/20 transition hover:-translate-y-0.5">Save changes</button>
+          </div>
+        </form>
+      )
+    }
+  </main>
+</Layout>

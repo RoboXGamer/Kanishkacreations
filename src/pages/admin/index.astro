@@ -1,0 +1,38 @@
+---
+export const prerender = false;
+
+import Layout from "../../layouts/Layout.astro";
+import { ADMIN_COOKIE_NAME, isAdminCookieValid } from "../../lib/admin/auth";
+
+if (!isAdminCookieValid(Astro.cookies.get(ADMIN_COOKIE_NAME)?.value)) {
+  return Astro.redirect("/admin/login?next=/admin");
+}
+---
+
+<Layout title="Admin | Kanishka Creations">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="max-w-3xl mb-10">
+      <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">Admin</span>
+      <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-3">Catalog dashboard</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-lg">Manage products, categories, and enquiry orders from one place.</p>
+    </div>
+
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <a href="/admin/products" class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 hover:border-primary transition">
+        <p class="text-xs font-bold tracking-[0.2em] uppercase text-primary mb-3">Products</p>
+        <h2 class="text-2xl font-bold mb-2">Manage products</h2>
+        <p class="text-slate-500 dark:text-slate-400">Create, edit, and delete catalog items stored in Convex.</p>
+      </a>
+      <a href="/admin/categories" class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 hover:border-primary transition">
+        <p class="text-xs font-bold tracking-[0.2em] uppercase text-primary mb-3">Categories</p>
+        <h2 class="text-2xl font-bold mb-2">Manage categories</h2>
+        <p class="text-slate-500 dark:text-slate-400">Edit category metadata, ordering, and storefront copy.</p>
+      </a>
+      <a href="/admin/orders" class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 hover:border-primary transition">
+        <p class="text-xs font-bold tracking-[0.2em] uppercase text-primary mb-3">Orders</p>
+        <h2 class="text-2xl font-bold mb-2">Review orders</h2>
+        <p class="text-slate-500 dark:text-slate-400">Keep the existing enquiry workflow and fulfillment tracking.</p>
+      </a>
+    </section>
+  </main>
+</Layout>

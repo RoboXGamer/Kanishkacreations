@@ -1,0 +1,12 @@
+{
+  "title": "Raw Materials",
+  "icon": "deployed_code",
+  "sortOrder": 1,
+  "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCnXkDBB2iVaXStqTWGGkY1su-8FLE-vOpI_OfgbG7UocDH7olYpr34_vzrZv3JN4yQR_gJCtUKf-Jw-c4K1_Gt77b94nb44dmv4KKht1Xm2iQSJGxRY22q_Ijn3nojjZW1rNhzQMtnsQS0jrsZOH-lLrsiW_5NgSDY0l2PkDbI9f4Xz0gwmgezV3IQAapkU6xADNFfTHDlI83vwRJDnB6xZ9hy0ZoL9sxOY2j_Jb0mzQfZWgWgg0Ubh0MyjljGvCQ7ueXYb6ttJiqj",
+  "buttonLabel": "Explore Materials",
+  "summaryItems": [
+    "Premium Glass Beads",
+    "Imported Silk Fabrics",
+    "Alloy Metal Bases"
+  ]
+}

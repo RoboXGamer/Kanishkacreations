@@ -1,0 +1,27 @@
+## Home page
+- line height h1 par reduce on index page
+- badge and h1 ke bich mai spacing reduce in hero section
+- cta button in not perfect
+
+- reduce inline overall layout margins by 10px
+- on the navbar need the bottom underline on hover with some shape
+
+- for the best seller section card, we need to increase the gap between the title and the price of the product
+- discover collection arrow underline fix the hover state breaking
+
+- badge/tag use on product card
+
+- best seller section we should cross the price and show discounted price
+- rating for each product
+
+- section divider/horizontal ruler increase color opacity on the main page footer section
+## Search Page
+- from in to out in the price range slider show yellow bg color
+- dropdown has background color white issue fix that and padding on the inline axis
+- center the grid and list mode switch icon on search page
+
+## details page
+- put the 2nd right column make it align items top
+- for the breadcrumb reduce the padding
+- reduce the opacity of the images that are on the left sidebar not selected
+## About us section below hero section on the main page add
