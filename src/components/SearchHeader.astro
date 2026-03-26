@@ -31,24 +31,24 @@ const { title, itemsCount, category } = Astro.props;
             class="flex items-center border border-slate-200 dark:border-white/10 rounded-lg overflow-hidden h-10"
         >
             <button
-                class="px-3 h-full bg-slate-200 dark:bg-white/10 text-slate-900 dark:text-white border-r border-slate-200 dark:border-white/10 grid-view-btn"
+                class="flex h-full items-center justify-center px-3 bg-slate-200 dark:bg-white/10 text-slate-900 dark:text-white border-r border-slate-200 dark:border-white/10 grid-view-btn"
             >
                 <span class="material-symbols-outlined text-xl">grid_view</span>
             </button>
             <button
-                class="px-3 h-full hover:bg-slate-100 dark:hover:bg-white/5 text-slate-500 transition-colors list-view-btn"
+                class="flex h-full items-center justify-center px-3 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-500 transition-colors list-view-btn"
             >
                 <span class="material-symbols-outlined text-xl">view_list</span>
             </button>
         </div>
         <select
             id="sort-select"
-            class="flex-1 md:flex-none bg-slate-900/60 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg py-2 pl-3 pr-10 text-sm focus:ring-primary focus:border-primary dark:text-white outline-none cursor-pointer"
+            class="flex-1 md:flex-none bg-slate-900/80 dark:bg-background-dark border border-slate-200 dark:border-white/10 rounded-lg py-2 pl-3 pr-10 text-sm focus:ring-primary focus:border-primary dark:text-white outline-none cursor-pointer"
         >
-            <option value="popularity">Sort by: Popularity</option>
-            <option value="newest">Newest Arrivals</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
+            <option class="bg-background-dark text-white" value="popularity">Sort by: Popularity</option>
+            <option class="bg-background-dark text-white" value="newest">Newest Arrivals</option>
+            <option class="bg-background-dark text-white" value="price-low">Price: Low to High</option>
+            <option class="bg-background-dark text-white" value="price-high">Price: High to Low</option>
         </select>
     </div>
 </div>

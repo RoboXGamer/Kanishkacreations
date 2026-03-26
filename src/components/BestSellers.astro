@@ -7,17 +7,18 @@ import {
     getProducts,
     resolveProductImage,
 } from "../lib/catalog";
+import type { ProductEntry } from "../lib/catalog";
 
-const [products, categoryMap] = await Promise.all([
-    getProducts(),
-    getCategoryMap(),
-]);
+const products: ProductEntry[] = await getProducts();
+const categoryMap: Map<any, any> = await getCategoryMap();
 
-const bestSellers = products.filter((p) => p.data.isBestSeller).slice(0, 4);
+const bestSellers = products
+    .filter((product) => product.data.isBestSeller)
+    .slice(0, 4);
 ---
 
 <section
-    class="bg-slate-950 dark:bg-background-dark border-y border-slate-200 dark:border-white/5 py-32 transition-colors duration-300"
+    class="bg-slate-950 dark:bg-background-dark border-y-2 border-slate-200/80 dark:border-white/20 py-32 transition-colors duration-300"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
@@ -25,16 +26,18 @@ const bestSellers = products.filter((p) => p.data.isBestSeller).slice(0, 4);
         >
             <div>
                 <h2 class="text-3xl font-bold dark:text-white">
-                    Best <span class="text-primary italic">Sellers</span>
+                    Best <span class="text-primary">Sellers</span>
                 </h2>
             </div>
             <a
-                class="text-primary font-bold flex items-center gap-1 hover:underline decoration-2 underline-offset-4 transition-all"
+                class="group inline-flex items-center gap-1 text-primary font-bold transition-all"
                 href="/search"
             >
-                <span>Discover Collections</span>
+                <span class="group-hover:underline decoration-2 underline-offset-4">
+                    Discover Collections
+                </span>
                 <span
-                    class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1"
+                    class="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-x-1"
                     >arrow_forward</span
                 >
             </a>

@@ -6,7 +6,7 @@ const lineItemValidator = v.object({
   value: v.string(),
 });
 
-const categoryInputValidator = {
+const categoryInputValidator = v.object({
   slug: v.string(),
   title: v.string(),
   icon: v.string(),
@@ -14,9 +14,9 @@ const categoryInputValidator = {
   image: v.string(),
   buttonLabel: v.string(),
   summaryItems: v.array(v.string()),
-};
+});
 
-const productInputValidator = {
+const productInputValidator = v.object({
   slug: v.string(),
   title: v.string(),
   legacyId: v.string(),
@@ -30,7 +30,7 @@ const productInputValidator = {
   details: v.array(lineItemValidator),
   specifications: v.array(lineItemValidator),
   careInstructions: v.array(v.string()),
-};
+});
 
 async function assertUniqueCategorySlug(
   ctx: QueryCtx,

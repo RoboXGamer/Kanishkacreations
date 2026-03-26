@@ -11,14 +11,13 @@ import {
     getProducts,
     resolveProductImage,
 } from "../lib/catalog";
+import type { CategoryEntry, ProductEntry } from "../lib/catalog";
 
-const [products, categories, categoryMap] = await Promise.all([
-    getProducts(),
-    getCategories(),
-    getCategoryMap(),
-]);
+const products: ProductEntry[] = await getProducts();
+const categories: CategoryEntry[] = await getCategories();
+const categoryMap: Map<any, any> = await getCategoryMap();
 
-const categoryOptions = categories.map((category) => ({
+const categoryOptions = categories.map((category: CategoryEntry) => ({
     id: category.id,
     title: category.data.title,
 }));
@@ -41,9 +40,9 @@ const categoryOptions = categories.map((category) => ({
                     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8"
                 >
                     {
-                        products.map((product) => (
+                        products.map((product: ProductEntry) => (
                             <div
-                                class="product-item"
+                                class="product-item w-full"
                                 data-category={product.data.category}
                                 data-price={product.data.priceInr}
                                 data-title={product.data.title.toLowerCase()}
@@ -56,6 +55,7 @@ const categoryOptions = categories.map((category) => ({
                                     price={formatInr(product.data.priceInr)}
                                     image={resolveProductImage(product.data.image)}
                                     badge={product.data.badge || null}
+                                    description={product.data.description}
                                 />
                             </div>
                         ))
@@ -99,6 +99,17 @@ const categoryOptions = categories.map((category) => ({
     let currentCategory = "all";
     let currentMaxPrice = 10000;
     let searchQuery = "";
+
+    function updatePriceRangeFill() {
+        if (!priceRange) return;
+
+        const min = Number(priceRange.min || 0);
+        const max = Number(priceRange.max || 10000);
+        const value = Number(priceRange.value || currentMaxPrice);
+        const percent = ((value - min) / (max - min)) * 100;
+
+        priceRange.style.background = `linear-gradient(to right, var(--color-primary) 0%, var(--color-primary) ${percent}%, rgba(255,255,255,0.08) ${percent}%, rgba(255,255,255,0.08) 100%)`;
+    }
 
     function updateFilters() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -163,19 +174,33 @@ const categoryOptions = categories.map((category) => ({
 
         productItems.forEach((item) => {
             const card = item.querySelector("a");
-            const imgContainer = card?.querySelector("div");
-            if (!card || !imgContainer) return;
+            const imgContainer = card?.querySelector(".product-media");
+            const content = card?.querySelector(".product-content");
+            const description = card?.querySelector(".product-description");
+            const cta = card?.querySelector(".product-cta");
+            if (!card || !imgContainer || !content || !description || !cta) return;
 
             card.classList.toggle("flex", view === "list");
             card.classList.toggle("flex-col", view === "list");
             card.classList.toggle("sm:flex-row", view === "list");
+            card.classList.toggle("items-stretch", view === "list");
+            card.classList.toggle("gap-0", view === "grid");
             card.classList.toggle("gap-6", view === "list");
-            card.classList.toggle("items-start", view === "list");
+
             imgContainer.classList.toggle("aspect-square", view === "grid");
-            imgContainer.classList.toggle("sm:w-64", view === "list");
+            imgContainer.classList.toggle("sm:w-60", view === "list");
             imgContainer.classList.toggle("shrink-0", view === "list");
-            imgContainer.classList.toggle("aspect-video", view === "list");
-            imgContainer.classList.toggle("sm:aspect-square", view === "list");
+
+            content.classList.toggle("flex-1", view === "list");
+            content.classList.toggle("mt-0", view === "list");
+            content.classList.toggle("mt-4", view === "grid");
+            content.classList.toggle("justify-between", view === "list");
+
+            description.classList.toggle("hidden", view !== "list");
+            description.classList.toggle("block", view === "list");
+
+            cta.classList.toggle("hidden", view !== "list");
+            cta.classList.toggle("inline-flex", view === "list");
         });
     }
 
@@ -198,6 +223,7 @@ const categoryOptions = categories.map((category) => ({
         if (priceDisplay) {
             priceDisplay.textContent = `Rs.${currentMaxPrice.toLocaleString()}${currentMaxPrice === 10000 ? "+" : ""}`;
         }
+        updatePriceRangeFill();
         updateFilters();
     });
 
@@ -226,10 +252,12 @@ const categoryOptions = categories.map((category) => ({
         currentMaxPrice = 10000;
         if (priceRange) priceRange.value = "10000";
         if (priceDisplay) priceDisplay.textContent = "Rs.10,000+";
+        updatePriceRangeFill();
         updateFilters();
     });
 
     updateFilters();
+    updatePriceRangeFill();
     setView("grid");
     window.addEventListener("popstate", updateFilters);
 </script>

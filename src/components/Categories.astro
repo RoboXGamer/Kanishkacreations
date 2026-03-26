@@ -1,7 +1,8 @@
 ---
 import { getCategories } from "../lib/catalog";
+import type { CategoryEntry } from "../lib/catalog";
 
-const categories = await getCategories();
+const categories: CategoryEntry[] = await getCategories();
 ---
 
 <section class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" id="categories">
@@ -17,19 +18,19 @@ const categories = await getCategories();
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {
-            categories.map((cat) => (
-                <div class="group relative overflow-hidden rounded-xl bg-slate-100 dark:bg-white/5 border border-white/5 p-8 h-[450px] flex flex-col justify-end transition-all hover:shadow-2xl hover:shadow-primary/5">
+            categories.map((cat: CategoryEntry) => (
+                <div class="group relative h-112.5 flex flex-col justify-end overflow-hidden rounded-xl border border-white/5 bg-slate-100 p-8 transition-all hover:shadow-2xl hover:shadow-primary/5 dark:bg-white/5">
                     <div
                         class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-100"
                         style={`background-image: url('${cat.data.image}');`}
                     />
-                    <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/40 to-transparent" />
+                    <div class="absolute inset-0 bg-linear-to-t from-background-dark via-background-dark/40 to-transparent" />
                     <div class="relative z-10 text-left">
                         <h3 class="text-2xl font-bold text-white mb-4">
                             {cat.data.title}
                         </h3>
                         <ul class="space-y-2 mb-6">
-                            {cat.data.summaryItems.map((item) => (
+                            {cat.data.summaryItems.map((item: string) => (
                                 <li class="text-slate-300 text-sm flex items-center gap-2">
                                     <span class="h-1 w-1 bg-primary rounded-full" />
                                     {item}

@@ -53,7 +53,7 @@ if (!orderId) {
 ---
 
 <Layout title="Enquiry Created | Kanishka Creations">
-    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12">
         {
             error ? (
                 <section class="rounded-3xl border border-red-200 bg-red-50 p-8">
@@ -64,29 +64,35 @@ if (!orderId) {
                     </a>
                 </section>
             ) : (
-                <section class="space-y-8">
-                    <div class="max-w-3xl">
+                <section class="space-y-8 lg:space-y-10">
+                    <div class="max-w-4xl">
                         <span class="text-xs font-bold tracking-[0.3em] uppercase text-primary block mb-3">
                             Enquiry Created
                         </span>
-                        <h1 class="text-4xl md:text-6xl font-black tracking-tight mb-4">
+                        <h1 class="text-2xl md:text-4xl font-black tracking-tight mb-4 leading-[0.95]">
                             Your order reference is {order.orderNumber}.
                         </h1>
-                        <p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed">
+                        <p class="text-slate-500 dark:text-slate-400 text-sm md:text-base leading-relaxed max-w-2xl">
                             Send the ready message below through WhatsApp or email so the team can confirm customization, timing, and dispatch details.
                         </p>
                     </div>
 
-                    <div class="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-10 items-start">
-                        <section class="rounded-3xl border border-slate-200 dark:border-white/10 p-8 bg-white/70 dark:bg-white/5">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                                <div>
-                                    <h2 class="font-bold mb-3">Customer</h2>
-                                    <p>{order.customer?.fullName}</p>
+                    <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_320px] gap-8 xl:gap-10 items-start">
+                        <section class="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 shadow-sm overflow-hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-0 md:divide-x md:divide-slate-200 md:dark:divide-white/10 border-b border-slate-200 dark:border-white/10">
+                                <div class="p-6 sm:p-7">
+                                    <h2 class="text-[10px] font-bold tracking-[0.3em] uppercase text-slate-500 dark:text-slate-400 mb-3">
+                                        Customer
+                                    </h2>
+                                    <p class="text-lg font-semibold text-slate-900 dark:text-white">
+                                        {order.customer?.fullName}
+                                    </p>
                                 </div>
-                                <div>
-                                    <h2 class="font-bold mb-3">Shipping address</h2>
-                                    <p class="text-slate-500 dark:text-slate-400">
+                                <div class="p-6 sm:p-7">
+                                    <h2 class="text-[10px] font-bold tracking-[0.3em] uppercase text-slate-500 dark:text-slate-400 mb-3">
+                                        Shipping address
+                                    </h2>
+                                    <p class="text-sm leading-6 text-slate-500 dark:text-slate-400">
                                         {order.address?.line1}<br />
                                         {order.address?.line2 && <>{order.address.line2}<br /></>}
                                         {order.address?.landmark && <>{order.address.landmark}<br /></>}
@@ -96,31 +102,47 @@ if (!orderId) {
                                 </div>
                             </div>
 
-                            <div class="space-y-4">
-                                {
-                                    order.items.map((item: any) => (
-                                        <div class="flex items-start gap-4 border-b border-slate-100 dark:border-white/10 pb-4">
-                                            <img src={item.productImage} alt={item.productTitle} class="w-20 h-20 rounded-2xl object-cover" />
-                                            <div class="flex-1">
-                                                <h3 class="font-bold">{item.productTitle}</h3>
-                                                <p class="text-sm text-slate-500">
-                                                    {item.quantity} x {item.unitPriceFormatted}
-                                                </p>
-                                            </div>
-                                            <span class="font-bold">{item.lineTotalFormatted}</span>
-                                        </div>
-                                    ))
-                                }
-                            </div>
+                            <div class="p-6 sm:p-7">
+                                <div class="flex items-center justify-between mb-5">
+                                    <h2 class="text-xs font-bold tracking-[0.25em] uppercase text-slate-500 dark:text-slate-400">
+                                        Order items
+                                    </h2>
+                                    <span class="text-xs font-bold text-slate-400">{order.items.length} item{order.items.length === 1 ? "" : "s"}</span>
+                                </div>
+                                <div class="divide-y divide-slate-200 dark:divide-white/10 border-t border-slate-200 dark:border-white/10">
+                                    {
+                                        order.items.map((item: any) => (
+                                            <a href={item.href} class="flex items-center gap-4 py-4 group">
+                                                <img src={item.productImage} alt={item.productTitle} class="w-16 h-16 rounded-xl object-cover shrink-0 ring-1 ring-white/10" />
+                                                <div class="min-w-0 flex-1">
+                                                    <div class="flex items-start justify-between gap-4">
+                                                        <div class="min-w-0">
+                                                            <h3 class="font-semibold text-slate-900 dark:text-white truncate group-hover:text-primary transition-colors">{item.productTitle}</h3>
+                                                            <p class="text-xs sm:text-sm text-slate-500">
+                                                                {item.quantity} x {item.unitPriceFormatted}
+                                                            </p>
+                                                        </div>
+                                                        <span class="font-bold text-slate-900 dark:text-white whitespace-nowrap">{item.lineTotalFormatted}</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        ))
+                                    }
+                                </div>
 
-                            <div class="pt-6 flex items-center justify-between text-lg font-bold">
-                                <span>Total</span>
-                                <span>{formatInr(order.totalInr)}</span>
+                                <div class="mt-6 pt-5 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-base sm:text-lg font-bold">
+                                    <span>Total</span>
+                                    <span>{formatInr(order.totalInr)}</span>
+                                </div>
                             </div>
                         </section>
 
-                        <aside class="rounded-3xl border border-slate-200 dark:border-white/10 p-8 bg-white/70 dark:bg-white/5">
-                            <h2 class="text-xl font-bold mb-4">Send enquiry</h2>
+                        <aside class="rounded-3xl border border-slate-200 dark:border-white/10 p-6 sm:p-7 bg-white/70 dark:bg-white/5 xl:sticky xl:top-24 shadow-sm">
+                            <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-primary block mb-3">Next step</span>
+                            <h2 class="text-xl font-bold mb-3">Send enquiry</h2>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 leading-6 mb-6">
+                                Share the reference with our team and we’ll confirm customization, timing, and dispatch details.
+                            </p>
                             <div class="space-y-3">
                                 <a href={links.whatsappUrl} target="_blank" class="w-full inline-flex justify-center bg-[#25D366] text-white font-bold py-3 rounded-xl">
                                     WhatsApp Sales

@@ -1,7 +1,8 @@
 ---
 import { getCategories } from "../lib/catalog";
+import type { CategoryEntry } from "../lib/catalog";
 
-const categories = await getCategories();
+const categories: CategoryEntry[] = await getCategories();
 ---
 
 <aside class="w-full lg:w-72 shrink-0 space-y-10">
@@ -29,7 +30,7 @@ const categories = await getCategories();
                 >
             </button>
             {
-                categories.map((cat) => (
+                categories.map((cat: any) => (
                     <button
                         class="category-btn group flex items-center justify-between px-4 py-3 rounded-xl transition-all hover:bg-slate-100 dark:hover:bg-white/5"
                         data-category={cat.id}
@@ -72,7 +73,7 @@ const categories = await getCategories();
                 max="10000"
                 step="100"
                 value="10000"
-                class="w-full h-1.5 bg-slate-200 dark:bg-white/10 rounded-lg appearance-none cursor-pointer accent-primary"
+                class="price-range w-full h-1.5 rounded-lg appearance-none cursor-pointer bg-slate-200 dark:bg-white/10"
             />
             <div
                 class="flex justify-between mt-3 text-[10px] font-bold text-slate-400 uppercase tracking-tighter"
@@ -85,6 +86,48 @@ const categories = await getCategories();
 </aside>
 
 <style>
+    .price-range {
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    .price-range::-webkit-slider-runnable-track {
+        height: 0.375rem;
+        border-radius: 9999px;
+        background: transparent;
+    }
+
+    .price-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 1.1rem;
+        height: 1.1rem;
+        margin-top: -0.375rem;
+        border-radius: 9999px;
+        background: #ffffff;
+        border: 2px solid var(--color-primary);
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
+    }
+
+    .price-range::-moz-range-track {
+        height: 0.375rem;
+        border-radius: 9999px;
+        background: transparent;
+    }
+
+    .price-range::-moz-range-thumb {
+        width: 1.1rem;
+        height: 1.1rem;
+        border-radius: 9999px;
+        background: #ffffff;
+        border: 2px solid var(--color-primary);
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
+    }
+
+    .price-range:focus {
+        outline: none;
+    }
+
     .category-btn.active {
         background-color: color-mix(
             in srgb,

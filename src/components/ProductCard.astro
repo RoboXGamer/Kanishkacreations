@@ -6,17 +6,18 @@ interface Props {
     price: string;
     image: string;
     badge?: string | null;
+    description?: string | null;
 }
 
-const { href, category, title, price, image, badge } = Astro.props;
+const { href, category, title, price, image, badge, description = "" } = Astro.props;
 ---
 
 <div
-    class="group bg-slate-950 dark:bg-background-dark rounded-xl p-4 transition-all hover:ring-2 hover:ring-primary/50 relative"
+    class="group relative h-full rounded-2xl border border-white/5 bg-slate-950/95 p-4 shadow-[0_12px_24px_rgba(0,0,0,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:ring-2 hover:ring-primary/40 dark:bg-background-dark"
 >
-    <a href={href} class="block">
+    <a href={href} class="card-link block h-full">
         <div
-            class="relative aspect-square overflow-hidden rounded-lg mb-4 bg-slate-200 dark:bg-white/5"
+            class="product-media relative aspect-square overflow-hidden rounded-xl bg-slate-200 dark:bg-white/5"
         >
             {
                 badge && (
@@ -28,23 +29,32 @@ const { href, category, title, price, image, badge } = Astro.props;
                 )
             }
             <img
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 src={image}
                 alt={title}
             />
         </div>
-        <p
-            class="text-slate-400 text-xs uppercase font-semibold tracking-widest mb-1"
-        >
-            {category}
-        </p>
-        <h3
-            class="font-bold mb-2 group-hover:text-primary transition-colors line-clamp-1 dark:text-white"
-        >
-            {title}
-        </h3>
-        <div class="flex items-center justify-between">
-            <p class="text-lg font-black dark:text-white">{price}</p>
+        <div class="product-content mt-4 flex min-w-0 flex-col">
+            <p
+                class="inline-flex w-fit rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-primary"
+            >
+                {category}
+            </p>
+            <h3
+                class="mt-2 text-[15px] font-bold leading-snug text-white transition-colors group-hover:text-primary line-clamp-2"
+            >
+                {title}
+            </h3>
+            <p class="product-description mt-2 hidden text-sm leading-6 text-slate-400 line-clamp-3">
+                {description}
+            </p>
+            <div class="product-footer mt-3 flex items-center justify-between gap-4">
+                <p class="product-price text-lg font-black text-white">{price}</p>
+                <span class="product-cta hidden items-center gap-1 text-xs font-bold uppercase tracking-[0.24em] text-primary">
+                    View details
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </span>
+            </div>
         </div>
     </a>
 </div>
