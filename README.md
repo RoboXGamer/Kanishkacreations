@@ -1,4 +1,4 @@
-# Kanishka Creations
+# Kanishka Creations -dev
 
 Astro storefront for a curated catalog backed by Convex, with an enquiry-only checkout flow and admin CRUD for products and categories.
 
