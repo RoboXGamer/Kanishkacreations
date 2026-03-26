@@ -1,20 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #f5d63d;
-  --color-background-light: #171717;
-  --color-background-dark: #0b0b0b;
+  --color-primary: #108603;
+  --color-background-light: #f8f8f5;
+  --color-background-dark: #ffffff;
   --font-display: "Inter", sans-serif;
 }
 
 @layer base {
   html {
-    color-scheme: dark;
-    background: var(--color-background-dark);
+    color-scheme: light;
+    background: var(--color-background-light);
   }
 
   body {
-    @apply font-display bg-background-dark text-slate-100 transition-colors duration-300;
+    @apply font-display bg-background-light text-slate-900 transition-colors duration-300;
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select {
+    background-color: #ffffff !important;
+    border-color: #cbd5e1 !important;
+    color: #0f172a !important;
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]):not(
+      [type="range"]
+    )::placeholder,
+  textarea::placeholder {
+    color: #94a3b8 !important;
   }
 }
 

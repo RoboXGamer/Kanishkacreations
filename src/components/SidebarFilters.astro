@@ -8,13 +8,13 @@ const categories: CategoryEntry[] = await getCategories();
 <aside class="w-full lg:w-72 shrink-0 space-y-10">
     <section>
         <h3
-            class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-6"
+            class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-6"
         >
             Collections
         </h3>
         <div class="flex flex-col gap-2">
             <button
-                class="category-btn group flex items-center justify-between px-4 py-3 rounded-xl transition-all hover:bg-slate-100 dark:hover:bg-white/5 active"
+                class="category-btn group flex items-center justify-between px-4 py-3 rounded-xl transition-all hover:bg-slate-100 active"
                 data-category="all"
             >
                 <div class="flex items-center gap-3">
@@ -32,7 +32,7 @@ const categories: CategoryEntry[] = await getCategories();
             {
                 categories.map((cat: any) => (
                     <button
-                        class="category-btn group flex items-center justify-between px-4 py-3 rounded-xl transition-all hover:bg-slate-100 dark:hover:bg-white/5"
+                        class="category-btn group flex items-center justify-between px-4 py-3 rounded-xl transition-all hover:bg-slate-100"
                         data-category={cat.id}
                     >
                         <div class="flex items-center gap-3">
@@ -55,7 +55,7 @@ const categories: CategoryEntry[] = await getCategories();
     <section>
         <div class="flex items-center justify-between mb-6">
             <h3
-                class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400"
+                class="text-xs font-bold uppercase tracking-widest text-slate-500"
             >
                 Price Range
             </h3>
@@ -73,7 +73,7 @@ const categories: CategoryEntry[] = await getCategories();
                 max="10000"
                 step="100"
                 value="10000"
-                class="price-range w-full h-1.5 rounded-lg appearance-none cursor-pointer bg-slate-200 dark:bg-white/10"
+                class="price-range w-full h-1.5 rounded-lg appearance-none cursor-pointer bg-slate-200"
             />
             <div
                 class="flex justify-between mt-3 text-[10px] font-bold text-slate-400 uppercase tracking-tighter"
@@ -106,7 +106,7 @@ const categories: CategoryEntry[] = await getCategories();
         border-radius: 9999px;
         background: #ffffff;
         border: 2px solid var(--color-primary);
-        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
+        box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.06);
     }
 
     .price-range::-moz-range-track {
@@ -121,7 +121,7 @@ const categories: CategoryEntry[] = await getCategories();
         border-radius: 9999px;
         background: #ffffff;
         border: 2px solid var(--color-primary);
-        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
+        box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.06);
     }
 
     .price-range:focus {

@@ -1,12 +1,13 @@
 ---
 import { getCategories } from "../lib/catalog";
+import type { CategoryEntry } from "../lib/catalog";
 
-const shopLinks = await getCategories();
+const shopLinks: CategoryEntry[] = await getCategories();
 const salesEmail = import.meta.env.PUBLIC_SALES_EMAIL || "sales@kc-creations.in";
 ---
 
 <footer
-    class="bg-slate-100 dark:bg-black/40 pt-20 pb-10 border-t border-white/5"
+    class="bg-slate-50 pt-20 pb-10 border-t border-slate-200"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
@@ -17,13 +18,13 @@ const salesEmail = import.meta.env.PUBLIC_SALES_EMAIL || "sales@kc-creations.in"
                         >diamond</span
                     >
                     <h2
-                        class="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase"
+                        class="text-xl font-bold tracking-tight text-slate-900 uppercase"
                     >
                         Kanishka <span class="text-primary">Creations</span>
                     </h2>
                 </a>
                 <p
-                    class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6"
+                    class="text-slate-600 text-sm leading-relaxed mb-6"
                 >
                     Bringing premium craftsmanship and elegant designs to your
                     doorstep. Specializing in handmade accessories and luxury
@@ -31,11 +32,11 @@ const salesEmail = import.meta.env.PUBLIC_SALES_EMAIL || "sales@kc-creations.in"
                 </p>
             </div>
             <div class="md:col-span-3">
-                <h3 class="font-bold mb-6 text-slate-900 dark:text-white">
+                <h3 class="font-bold mb-6 text-slate-900">
                     Shop Links
                 </h3>
                 <ul
-                    class="space-y-4 text-slate-500 dark:text-slate-400 text-sm"
+                    class="space-y-4 text-slate-600 text-sm"
                 >
                     {
                         shopLinks.map((link) => (
@@ -52,10 +53,10 @@ const salesEmail = import.meta.env.PUBLIC_SALES_EMAIL || "sales@kc-creations.in"
                 </ul>
             </div>
             <div class="md:col-span-4">
-                <h3 class="font-bold mb-6 text-slate-900 dark:text-white">
+                <h3 class="font-bold mb-6 text-slate-900">
                     Email us for any query
                 </h3>
-                <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">
+                <p class="text-slate-600 text-sm mb-4">
                     Reach out to us at <a
                         href={`mailto:${salesEmail}`}
                         class="text-primary hover:underline"
@@ -72,12 +73,12 @@ const salesEmail = import.meta.env.PUBLIC_SALES_EMAIL || "sales@kc-creations.in"
             </div>
         </div>
         <div
-            class="pt-10 border-t border-slate-200 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium"
+            class="pt-10 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500 font-medium"
         >
             <p>&copy; 2026 Kanishka Creations. All rights reserved.</p>
             <div class="flex gap-6 uppercase tracking-widest">
-                <a class="hover:text-white" href="/coming-soon">Terms</a>
-                <a class="hover:text-white" href="/coming-soon">Sitemap</a>
+                <a class="hover:text-slate-900" href="/coming-soon">Terms</a>
+                <a class="hover:text-slate-900" href="/coming-soon">Sitemap</a>
             </div>
         </div>
     </div>

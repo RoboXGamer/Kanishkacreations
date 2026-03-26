@@ -215,6 +215,9 @@ async function queryCategories() {
     const categories = await convexQuery<CategoryRecord[]>(
       "catalog:listCategories",
     );
+    if (!categories.length) {
+      return loadLocalCategories();
+    }
     return categories.map(toCategoryEntry);
   } catch {
     return loadLocalCategories();
@@ -228,6 +231,9 @@ async function queryProducts() {
 
   try {
     const products = await convexQuery<ProductRecord[]>("catalog:listProducts");
+    if (!products.length) {
+      return loadLocalProducts();
+    }
     return products.map(toProductEntry);
   } catch {
     return loadLocalProducts();

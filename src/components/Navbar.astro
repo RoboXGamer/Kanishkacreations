@@ -6,7 +6,7 @@ const navItems: CategoryEntry[] = await getCategories();
 ---
 
 <header
-    class="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-950/80 dark:bg-background-dark/80 backdrop-blur-md"
+    class="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/90 backdrop-blur-md"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
@@ -15,7 +15,7 @@ const navItems: CategoryEntry[] = await getCategories();
                     >diamond</span
                 >
                 <h1
-                    class="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase"
+                    class="text-xl font-bold tracking-tight text-slate-900 uppercase"
                 >
                     Kanishka <span class="text-primary">Creations</span>
                 </h1>
@@ -40,14 +40,14 @@ const navItems: CategoryEntry[] = await getCategories();
                     >
                     <input
                         id="global-search"
-                        class="bg-slate-900/60 dark:bg-white/5 border-none rounded-full pl-10 pr-4 py-1.5 text-sm focus:ring-1 focus:ring-primary w-48 transition-all focus:w-64 text-white placeholder:text-slate-400"
+                        class="border border-slate-300 rounded-full pl-10 pr-4 py-1.5 text-sm focus:ring-1 focus:ring-primary w-48 transition-all focus:w-64 bg-white text-slate-900 placeholder:text-slate-400"
                         placeholder="Search..."
                         type="text"
                     />
                 </div>
                 <a
                     href="/cart"
-                    class="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+                    class="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-100 transition-colors"
                 >
                     <span class="material-symbols-outlined text-lg leading-none">shopping_bag</span>
                     <span

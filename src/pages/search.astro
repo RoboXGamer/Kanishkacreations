@@ -108,7 +108,7 @@ const categoryOptions = categories.map((category: CategoryEntry) => ({
         const value = Number(priceRange.value || currentMaxPrice);
         const percent = ((value - min) / (max - min)) * 100;
 
-        priceRange.style.background = `linear-gradient(to right, var(--color-primary) 0%, var(--color-primary) ${percent}%, rgba(255,255,255,0.08) ${percent}%, rgba(255,255,255,0.08) 100%)`;
+        priceRange.style.background = `linear-gradient(to right, var(--color-primary) 0%, var(--color-primary) ${percent}%, rgba(226,232,240,1) ${percent}%, rgba(226,232,240,1) 100%)`;
     }
 
     function updateFilters() {
@@ -163,7 +163,6 @@ const categoryOptions = categories.map((category: CategoryEntry) => ({
         gridViewBtn.classList.toggle("bg-slate-200", view === "grid");
         gridViewBtn.classList.toggle("dark:bg-white/10", view === "grid");
         gridViewBtn.classList.toggle("text-slate-900", view === "grid");
-        gridViewBtn.classList.toggle("dark:text-white", view === "grid");
         gridViewBtn.classList.toggle("text-slate-500", view !== "grid");
 
         listViewBtn.classList.toggle("bg-slate-200", view === "list");
